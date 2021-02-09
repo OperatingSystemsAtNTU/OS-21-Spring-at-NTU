@@ -19,7 +19,7 @@ layout: default
 
 * * *
 
-對作業內容有任何疑問請至NTU COOL討論區發問
+對作業內容有任何疑問請至[NTU COOL討論區](https://cool.ntu.edu.tw/courses/4549/discussion_topics)發問
 
 歡迎幫同學互相回答問題，若學期末進行調分會優先考慮：
 
@@ -33,6 +33,4 @@ layout: default
 1. 僅能使用C
 1. 嚴禁抄襲
 
-```
-The final element.
-```
+
