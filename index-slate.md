@@ -2,36 +2,121 @@
 layout: default
 ---
 
-# 公告置頂
+Text can be **bold**, _italic_, or ~~strikethrough~~.
 
-* 加簽同學請填寫[加簽表單](https://docs.google.com/forms/d/e/1FAIpQLSfHSWQM96YAqhzH2rc5nmdoRG9jkIIU7PWeuJNnRAzuBsxYtQ/viewform)
-* 修課同學請填寫[GitHub帳號登記表](https://docs.google.com/forms/d/e/1FAIpQLSfhC9EgGVVFL_03bdn1_F3OQA71CirCMYptzrsjL0SpGOaRoQ/viewform).(03/02開放)
+[Link to another page](./another-page.html).
 
-# 作業
+There should be whitespace between paragraphs.
 
-| 標題                |  早鳥 | 期限   | 負責助教 |
-|:-------------------|:------|:------|:--------|
-| MP0: Set up xv6    |   X   | 03/07  | 高聖傑  |
-| MP1: Thread        |       | 03/30  | Vincent Kuo, 林昱賢 |
-| MP2: Shared Memory | 04/13 | 04/20  | 高聖傑  |
-| MP3:               |       | 05/24  | 林家佑  |
-| MP4:               |       | 06/15  | 周良冠  |
+There should be whitespace between paragraphs. We recommend including a README, or a file with information about your project.
+
+# Header 1
+
+This is a normal paragraph following a header. GitHub is a code hosting platform for version control and collaboration. It lets you and others work together on projects from anywhere.
+
+## Header 2
+
+> This is a blockquote following a header.
+>
+> When something is important enough, you do it even if the odds are not in your favor.
+
+### Header 3
+
+```js
+// Javascript code with syntax highlighting.
+var fun = function lang(l) {
+  dateformat.i18n = require('./lang/' + l)
+  return true;
+}
+```
+
+```ruby
+# Ruby code with syntax highlighting
+GitHubPages::Dependencies.gems.each do |gem, version|
+  s.add_dependency(gem, "= #{version}")
+end
+```
+
+#### Header 4
+
+*   This is an unordered list following a header.
+*   This is an unordered list following a header.
+*   This is an unordered list following a header.
+
+##### Header 5
+
+1.  This is an ordered list following a header.
+2.  This is an ordered list following a header.
+3.  This is an ordered list following a header.
+
+###### Header 6
+
+| head1        | head two          | three |
+|:-------------|:------------------|:------|
+| ok           | good swedish fish | nice  |
+| out of stock | good and plenty   | nice  |
+| ok           | good `oreos`      | hmm   |
+| ok           | good `zoute` drop | yumm  |
+
+### There's a horizontal rule below this.
 
 * * *
 
-對作業內容有任何疑問請至NTU COOL討論區發問
+### Here is an unordered list:
 
-歡迎幫同學互相回答問題，若學期末進行調分會優先考慮：
+*   Item foo
+*   Item bar
+*   Item baz
+*   Item zip
 
-1. 幫忙回答問題者
-1. 抓到作業bug者
+### And an ordered list:
 
-* * *
+1.  Item one
+1.  Item two
+1.  Item three
+1.  Item four
 
-# 作業規則
+### And a nested list:
 
-1. 僅能使用C
-1. 嚴禁抄襲
+- level 1 item
+  - level 2 item
+  - level 2 item
+    - level 3 item
+    - level 3 item
+- level 1 item
+  - level 2 item
+  - level 2 item
+  - level 2 item
+- level 1 item
+  - level 2 item
+  - level 2 item
+- level 1 item
+
+### Small image
+
+![Octocat](https://github.githubassets.com/images/icons/emoji/octocat.png)
+
+### Large image
+
+![Branching](https://guides.github.com/activities/hello-world/branching.png)
+
+
+### Definition lists can be used with HTML syntax.
+
+<dl>
+<dt>Name</dt>
+<dd>Godzilla</dd>
+<dt>Born</dt>
+<dd>1952</dd>
+<dt>Birthplace</dt>
+<dd>Japan</dd>
+<dt>Color</dt>
+<dd>Green</dd>
+</dl>
+
+```
+Long, single-line code blocks should not wrap. They should horizontally scroll if they are too long. This line should be long enough to demonstrate this.
+```
 
 ```
 The final element.
