@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+
+    
+    <meta charset="UTF-8">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>MP0 - Set up xv6 | OS-21-Spring-at-NTU</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="MP0 - Set up xv6" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Github Course Site for Operating Systems 2021 at National Taiwan University" />
+<meta property="og:description" content="Github Course Site for Operating Systems 2021 at National Taiwan University" />
+<link rel="canonical" href="http://localhost:4000/mp0.html" />
+<meta property="og:url" content="http://localhost:4000/mp0.html" />
+<meta property="og:site_name" content="OS-21-Spring-at-NTU" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="MP0 - Set up xv6" />
+<script type="application/ld+json">
+{"@type":"WebPage","headline":"MP0 - Set up xv6","url":"http://localhost:4000/mp0.html","description":"Github Course Site for Operating Systems 2021 at National Taiwan University","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="/assets/css/style.css?v=5bb364e182fd5d5964750e15385cdc4621a2bfa7">
+  </head>
+  <body>
+    <a id="skip-to-content" href="#content">Skip to the content.</a>
+
+    <header class="page-header" role="banner">
+      <h1 class="project-name">Operating System 2021 Machine Problem Site</h1>
+      <h2 class="project-tagline">The site provides the information for machine problems for Operating System Course offerred in Spring 2021 at National Taiwan University</h2>
+    </header>
+
+    <main id="content" class="main-content" role="main">
+      <h1 id="mp0---set-up-xv6">MP0 - Set up xv6</h1>
+
+<p><strong>xv6</strong> is an example kernel created by MIT for pedagogical purpose. We will study <strong>xv6</strong> to get the picture of the main concepts of operating systems.</p>
+
+<p>Reference book of <strong>xv6</strong> is <a href="https://pdos.csail.mit.edu/6.828/2020/xv6/book-riscv-rev1.pdf"><em>xv6: a simple, Unix-like teaching operating system</em></a>.</p>
+
+<p>In this MP, you will learn how to set up the environment for <strong>xv6</strong>.</p>
+
+<h2 id="1-install-docker">1. Install Docker</h2>
+
+<h3 id="why-docker">Why Docker</h3>
+
+<p>In order to run another OS on your machine, you need <strong>virtualization</strong>.</p>
+
+<p>Virtualization is the process of running a virtual instance of a computer system in a layer abstracted from the actual hardware. A <strong>virtual machine (VM)</strong> is the emulated equivalent of a computer system that runs on top of another system.</p>
+
+<p>However, VM runs a <em>full-blown</em> <strong>guest OS</strong> with virtual access to <strong>host</strong> resources through a <strong>hypervisor</strong>. In general, it incurs lots of overhead beyond what is being consumed by your application logic.</p>
+
+<p>By contrast, <strong>container</strong> runs a discrete <strong>process</strong>, taking no more memory than any other executable, making it lightweight. And <strong>Docker</strong> is a platform for you to build and run with containers.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Virtual Machine</th>
+      <th style="text-align: center">Container</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><img src="https://docs.docker.com/images/VM%402x.png" width="300" /></td>
+      <td style="text-align: center"><img src="https://docs.docker.com/images/Container%402x.png" width="300" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>We also leverage the advantage of virtualization to <em>standardize</em> the environment of your homework, making the problems independent from both architectures and OSes of your machines.</p>
+
+<h3 id="supported-platforms">Supported Platforms</h3>
+
+<p>Docker is available on <strong>Windows</strong>, <strong>Mac</strong> and a variety of <strong>Linux</strong> platforms. You can choose your preferred operating system below, and follow the instructions of installation guide.</p>
+
+<h4 id="docker-desktop">Docker Desktop</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Platform</th>
+      <th style="text-align: center">x86_64 / amd64</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="https://docs.docker.com/docker-for-windows/install/">Docker Desktop for Windows</a></td>
+      <td style="text-align: center"><img src="https://docs.docker.com/images/green-check.svg" alt="check" /></td>
+    </tr>
+    <tr>
+      <td><a href="https://docs.docker.com/docker-for-mac/install/">Docker Desktop for Mac</a></td>
+      <td style="text-align: center"><img src="https://docs.docker.com/images/green-check.svg" alt="check" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="docker-engine">Docker Engine</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Platform</th>
+      <th style="text-align: center">x86_64 / amd64</th>
+      <th style="text-align: center">ARM</th>
+      <th style="text-align: center">ARM64 / AARCH64</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="https://docs.docker.com/engine/install/ubuntu/">Ubuntu</a></td>
+      <td style="text-align: center"><img src="https://docs.docker.com/images/green-check.svg" alt="check" /></td>
+      <td style="text-align: center"><img src="https://docs.docker.com/images/green-check.svg" alt="check" /></td>
+      <td style="text-align: center"><img src="https://docs.docker.com/images/green-check.svg" alt="check" /></td>
+    </tr>
+    <tr>
+      <td><a href="https://docs.docker.com/engine/install/debian/">Debian</a></td>
+      <td style="text-align: center"><img src="https://docs.docker.com/images/green-check.svg" alt="check" /></td>
+      <td style="text-align: center"><img src="https://docs.docker.com/images/green-check.svg" alt="check" /></td>
+      <td style="text-align: center"><img src="https://docs.docker.com/images/green-check.svg" alt="check" /></td>
+    </tr>
+    <tr>
+      <td><a href="https://docs.docker.com/engine/install/centos/">CentOS</a></td>
+      <td style="text-align: center"><img src="https://docs.docker.com/images/green-check.svg" alt="check" /></td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"><img src="https://docs.docker.com/images/green-check.svg" alt="check" /></td>
+    </tr>
+    <tr>
+      <td><a href="https://docs.docker.com/engine/install/fedora/">Fedora</a></td>
+      <td style="text-align: center"><img src="https://docs.docker.com/images/green-check.svg" alt="check" /></td>
+      <td style="text-align: center"> </td>
+      <td style="text-align: center"><img src="https://docs.docker.com/images/green-check.svg" alt="check" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Yet, we suggest you install Docker on <strong>Linux</strong> platforms, because Docker commands we provide in this and future MPs will be based on Linux platforms. We do not guarantee to answer Docker’s issues on other platforms. In addition, containers run <em>natively</em> on Linux.</p>
+
+<h3 id="test-installation">Test Installation</h3>
+
+<p>To check whether you have installed Docker correctly, run <code class="language-plaintext highlighter-rouge">hello-world</code> image.</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker run hello-world
+</code></pre></div></div>
+<p>You should see some informational messages.</p>
+
+<h2 id="2-run-docker-container">2. Run Docker Container</h2>
+
+<ol>
+  <li>Clone <code class="language-plaintext highlighter-rouge">mp0</code> from our GitHub repository and enter it.
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git clone <span class="o">[</span>repository_path]
+<span class="nv">$ </span><span class="nb">cd </span>mp0
+</code></pre></div>    </div>
+    <h4 id="temporary-link-mp0zip">*Temporary Link: <a href="https://drive.google.com/file/d/1xqIjV72PGiInFQXw0R-wzUTvG_T-F07y/view?usp=sharing">mp0.zip</a></h4>
+  </li>
+  <li>
+    <p>Download tar archive <a href="https://drive.google.com/file/d/1f2sliHICbfzVyZgt8Iw6c-o9zWAkteJN/view?usp=sharing">os_mp0.tar</a> (1.5G)</p>
+
+    <p>—Update—</p>
+
+    <p><strong>Another approach</strong><br />
+Get the image from Docker Hub</p>
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker pull ntuos/mp0
+</code></pre></div>    </div>
+    <p>Then go to step 4.</p>
+
+    <p>—Update—</p>
+
+    <p>TA has set up the environment for the MP0 and packed it as a Docker image. TA will upload Docker image in each MP in similar way so that you can start your homework with ease by loading the image.</p>
+  </li>
+  <li>Load Docker image from tar archive.
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker load <span class="nt">--input</span> os_mp0.tar
+</code></pre></div>    </div>
+  </li>
+  <li><strong>(Update)</strong> Use <code class="language-plaintext highlighter-rouge">docker run</code> to start the process in a container and allocate a TTY for the container process.
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Download image from Google Drive
+<span class="nv">$ </span>docker run <span class="nt">-it</span> <span class="nt">-v</span> <span class="si">$(</span><span class="nb">pwd</span><span class="si">)</span>/xv6:/home/os_mp0/xv6 os_mp0
+// Download image with docker pull
+<span class="nv">$ </span>docker run <span class="nt">-it</span> <span class="nt">-v</span> <span class="si">$(</span><span class="nb">pwd</span><span class="si">)</span>/xv6:/home/os_mp0/xv6 ntuos/mp0 
+</code></pre></div>    </div>
+    <p>This will make Docker container be an interactive process and pretend to be a shell.</p>
+
+    <p>You may notice that we mount a volume with <code class="language-plaintext highlighter-rouge">-v</code>. Volumes are often a better choice than persisting data in a container’s writable layer, because a volume does not increase the size of the containers using it, and the volume’s contents exist outside the lifecycle of a given container.</p>
+
+    <p><img src="https://docs.docker.com/storage/images/types-of-mounts-volume.png" alt="shared filesystems" /></p>
+
+    <p>But we adopt it here is simply to give you the flexibility that you can do coding outside the container with your favorite editor rather than coding with <code class="language-plaintext highlighter-rouge">vim</code> inside. Of course, if you are a <code class="language-plaintext highlighter-rouge">vim</code> lover, you get the privilege to be free of stepping in and out the container while debugging.</p>
+  </li>
+  <li>You should be able to check the environment in Docker container.
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> /etc/os-release
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="3-launch-xv6">3. Launch xv6</h2>
+
+<p><strong>xv6</strong> is implemented in <strong>ANSI C</strong> for a multi-core <strong>RISC-V</strong> system, but most of our machines are not RISC-V system. Therefore, we need <strong>QEMU</strong> to help us launching <strong>xv6</strong> on non-RSIC-V architecture. QEMU is an emulator and virtualizer that can perform hardware virtualization.</p>
+
+<p style="max-width:600px;display:flex;justify-content:space-between;align-items:flex-end;">
+  <img src="https://i.imgur.com/2kwmFIt.png" style="width:60%;" />
+  <img src="https://i.imgur.com/ZxGIw6m.png" style="width:30%;" />
+</p>
+
+<p>An instruction set architecture (ISA) is an abstract model of a computer, also referred to as computer architecture. The ISA serves as the interface between software and hardware. <a href="https://en.wikipedia.org/wiki/Comparison_of_instruction_set_architectures">Learn more</a></p>
+
+<p>Suppose you are in Docker container. You should see you are under <code class="language-plaintext highlighter-rouge">xv6</code> directory. In <code class="language-plaintext highlighter-rouge">xv6</code> directory, build and run <strong>xv6</strong> on QEMU by entering <strong><code class="language-plaintext highlighter-rouge">make qemu</code></strong> with <code class="language-plaintext highlighter-rouge">Makefile</code> we provided for you.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>make qemu
+riscv64-linux-gnu-gcc    <span class="nt">-c</span> <span class="nt">-o</span> kernel/entry.o kernel/entry.S
+riscv64-linux-gnu-gcc <span class="nt">-Wall</span> <span class="nt">-Werror</span> <span class="nt">-O</span> <span class="nt">-fno-omit-frame-pointer</span> <span class="nt">-ggdb</span> <span class="nt">-DSOL_UTIL</span> <span class="nt">-MD</span> <span class="nt">-mcmodel</span><span class="o">=</span>medany <span class="nt">-ffreestanding</span> <span class="nt">-fno-common</span> <span class="nt">-nostdlib</span> <span class="nt">-mno-relax</span> <span class="nt">-I</span><span class="nb">.</span> <span class="nt">-fno-stack-protector</span> <span class="nt">-fno-pie</span> <span class="nt">-no-pie</span>   <span class="nt">-c</span> <span class="nt">-o</span> kernel/start.o kernel/start.c
+...
+riscv64-linux-gnu-ld <span class="nt">-z</span> max-page-size<span class="o">=</span>4096 <span class="nt">-N</span> <span class="nt">-e</span> main <span class="nt">-Ttext</span> 0 <span class="nt">-o</span> user/_zombie user/zombie.o user/ulib.o user/usys.o user/printf.o user/umalloc.o
+riscv64-linux-gnu-objdump <span class="nt">-S</span> user/_zombie <span class="o">&gt;</span> user/zombie.asm
+riscv64-linux-gnu-objdump <span class="nt">-t</span> user/_zombie | <span class="nb">sed</span> <span class="s1">'1,/SYMBOL TABLE/d; s/ .* / /; /^$/d'</span> <span class="o">&gt;</span> user/zombie.sym
+mkfs/mkfs fs.img README  user/_cat user/_echo user/_grep user/_init user/_kill user/_ln user/_ls user/_mkdir user/_rm user/_sh user/_stressfs user/_grind user/_wc user/_zombie 
+nmeta 46 <span class="o">(</span>boot, super, log blocks 30 inode blocks 13, bitmap blocks 1<span class="o">)</span> blocks 954 total 1000
+balloc: first 430 blocks have been allocated
+balloc: write bitmap block at sector 45
+qemu-system-riscv64 <span class="nt">-machine</span> virt <span class="nt">-bios</span> none <span class="nt">-kernel</span> kernel/kernel <span class="nt">-m</span> 128M <span class="nt">-smp</span> 3 <span class="nt">-nographic</span> <span class="nt">-drive</span> <span class="nv">file</span><span class="o">=</span>fs.img,if<span class="o">=</span>none,format<span class="o">=</span>raw,id<span class="o">=</span>x0 <span class="nt">-device</span> virtio-blk-device,drive<span class="o">=</span>x0,bus<span class="o">=</span>virtio-mmio-bus.0
+
+xv6 kernel is booting
+
+hart 2 starting
+hart 1 starting
+init: starting sh
+<span class="nv">$ </span>
+</code></pre></div></div>
+
+<p>If you type <code class="language-plaintext highlighter-rouge">ls</code> at the prompt, you should see output similar to the following.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span>
+<span class="nb">.</span>              1 1 1024
+..             1 1 1024
+README         2 2 2059
+<span class="nb">cat            </span>2 3 24096
+<span class="nb">echo           </span>2 4 22920
+<span class="nb">grep           </span>2 5 27408
+init           2 6 23656
+<span class="nb">kill           </span>2 7 22888
+<span class="nb">ln             </span>2 8 22720
+<span class="nb">ls             </span>2 9 26288
+<span class="nb">mkdir          </span>2 10 23016
+<span class="nb">rm             </span>2 11 23008
+sh             2 12 41840
+stressfs       2 13 23880
+grind          2 14 37984
+<span class="nb">wc             </span>2 15 25208
+zombie         2 16 22264
+console        3 17 0
+</code></pre></div></div>
+
+<p>These are the files that <code class="language-plaintext highlighter-rouge">mkfs</code> includes in the initial file system; most are programs you can run. You just ran one of them: <code class="language-plaintext highlighter-rouge">ls</code>.</p>
+
+<p>Congratulation! You have accomplished setting up <strong>xv6</strong>. You are welcome to play around in preparation for future MPs. Here are useful commands for you:</p>
+
+<ul>
+  <li>
+    <p><strong>Ctrl-p</strong><br />
+Print information about each process. If you try it now, you’ll see two lines: one for <code class="language-plaintext highlighter-rouge">init</code>, and the other for <code class="language-plaintext highlighter-rouge">sh</code>.</p>
+  </li>
+  <li>
+    <p><strong>Ctrl-a x</strong><br />
+Quit QEMU.</p>
+  </li>
+</ul>
+
+<h2 id="4-exercise">4. Exercise</h2>
+
+<p>Below we provide an <em>easy</em> example MP. If you find it hard to you, you should think twice before taking this course, or should work harder.</p>
+
+<p>We assume:</p>
+<ul>
+  <li>You are good at coding with <strong>C</strong>.</li>
+  <li>You are familiar with <strong>System Programming</strong>.</li>
+  <li>You are willing to learn the competency of <strong>looking up reference book</strong> and <strong>tracing source code</strong>.
+    <ul>
+      <li>The ability of google-ing the solution on Stack Overflow will not make you escape from this. If you feel disinclined for learning them, you may also feel terrible while doing MPs.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="example-mp">Example MP</h3>
+
+<h4 id="description">Description</h4>
+
+<p>Write a program named <strong>detective</strong> that uses UNIX system calls to find the files in a directory tree with a specific name, and communicate the result between two processes over a pipe.</p>
+
+<h4 id="explanation">Explanation</h4>
+
+<p>In 1887, Europe was ringing with a name - Sherlock Holmes. His clients vary from the most powerful monarchs and governments of Europe, to wealthy aristocrats and industrialists, to impoverished pawnbrokers and governesses.</p>
+
+<p>Holmes works as a detective for twenty-three years, with Watson assisting him for seventeen of those years. John Watson, Holmes’s friend, accompanies Holmes during his investigations and often shares quarters with him at the address of 221B Baker Street, London, where many of the stories begin.</p>
+
+<p align="center">
+  <img src="https://www.arthur-conan-doyle.com/images/thumb/e/ec/The-strand-magazine-1893-09-the-adventure-of-the-greek-interpreter-p297-illu.jpg/556px-The-strand-magazine-1893-09-the-adventure-of-the-greek-interpreter-p297-illu.jpg" />
+</p>
+
+<p>Now, you are disguising Conan Doyle by creating the legendary private detective in an operating system way. Here is the revised version for you to mimic how Holmes and Watson receive a commission from the client and perform the prelude to their <a href="https://dictionary.cambridge.org/dictionary/english/forensics?q=Forensics">forensics</a>.</p>
+
+<ol>
+  <li>The detective accepts the commission from the client.</li>
+  <li>Holmes appoints the investigation job to Watson.</li>
+  <li>Watson looks for clues around the crime scene.</li>
+  <li>Watson reports the observation to Holmes.</li>
+  <li>Holmes smokes cigars (In fact he smokes <a href="https://en.wikipedia.org/wiki/Tobacco_pipe">pipes</a>, but we try not confusing you here) and starts his deduction.</li>
+</ol>
+
+<p>Your fiction in <strong>xv6</strong> world is:</p>
+
+<ol>
+  <li>The process <code class="language-plaintext highlighter-rouge">detective</code> reads one argument from command line.
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>detective <span class="o">[</span>commission]
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>The process forks a child.</p>
+  </li>
+  <li>
+    <p>The child finds the files below current working directory with a specific name (fully match), and prints <strong>all</strong> matches files.</p>
+  </li>
+  <li>The child writes a character on the pipe to the parent. The character <code class="language-plaintext highlighter-rouge">y</code> and <code class="language-plaintext highlighter-rouge">n</code> imply whether the child obtains files or not, respectively:
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/<span class="k">*</span> Example 1 <span class="k">*</span>/
+<span class="nv">$ </span>detective hello
+// fork child
+&lt;pid&gt; as Watson: ./hello           // printed by child
+&lt;pid&gt; as Watson: ./some_dir/hello  // printed by child
+// child writes <span class="s1">'y'</span> on the pipe
+/<span class="k">*</span> Example 2 <span class="k">*</span>/
+<span class="nv">$ </span>detective world
+// fork child
+// child finds no matched file
+// child writes <span class="s1">'n'</span> on the pipe
+</code></pre></div>    </div>
+    <p>where <code class="language-plaintext highlighter-rouge">&lt;pid&gt;</code> is child’s process ID. Then the child exits.</p>
+
+    <p>Note: The child should traverse the file system in a depth-first order. And the order it traverses within a directory should be identical to the order of <code class="language-plaintext highlighter-rouge">ls</code>. That is, if we get some output from <code class="language-plaintext highlighter-rouge">ls</code> command like:</p>
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls </span>some_dir
+file_b
+dir_a
+</code></pre></div>    </div>
+    <p>The child should start from checking <code class="language-plaintext highlighter-rouge">file_b</code> instead of <code class="language-plaintext highlighter-rouge">dir_a</code>.</p>
+  </li>
+  <li>The parent reads the character from the pipe and print:
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/<span class="k">*</span> Upon receiving <span class="s1">'y'</span> <span class="k">*</span>/
+&lt;pid&gt; as Holmes: This is the evidence  // printed by parent
+/<span class="k">*</span> Upon receiving <span class="s1">'n'</span> <span class="k">*</span>/
+&lt;pid&gt; as Holmes: This is the alibi     // printed by parent
+</code></pre></div>    </div>
+    <p>where <code class="language-plaintext highlighter-rouge">&lt;pid&gt;</code> is parent’s process ID and <a href="https://dictionary.cambridge.org/dictionary/english/alibi">alibi</a> stands for 不在場證明 in Mandarin. Then the parent exits.</p>
+  </li>
+</ol>
+
+<h4 id="hint">Hint</h4>
+
+<ul>
+  <li>Read Chapter 1 of the <a href="https://pdos.csail.mit.edu/6.828/2020/xv6/book-riscv-rev1.pdf"><strong>xv6</strong> book</a>.</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">fork</code> to create a child.</li>
+  <li>Look at <code class="language-plaintext highlighter-rouge">user/ls.c</code> to see how to read directories.</li>
+  <li>Use recursion to allow find to descend into sub-directories, and don’t recurse into <code class="language-plaintext highlighter-rouge">.</code> and <code class="language-plaintext highlighter-rouge">..</code>.</li>
+  <li><strong>(Update)</strong> You can assume <code class="language-plaintext highlighter-rouge">[commission]</code> will never be the symbolic link.</li>
+  <li>You’ll need to manipulate C strings, such as using <code class="language-plaintext highlighter-rouge">strcmp()</code>.</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">pipe</code> to create a pipe.</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">read</code> to read from the pipe, and <code class="language-plaintext highlighter-rouge">write</code> to write to the pipe.</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">getpid</code> to find the process ID of the calling process.</li>
+  <li>Make sure <code class="language-plaintext highlighter-rouge">main</code> calls <code class="language-plaintext highlighter-rouge">exit()</code> in order to exit your program.</li>
+  <li>User programs on <strong>xv6</strong> have a limited set of library functions available to them. You can see the list in <code class="language-plaintext highlighter-rouge">user/user.h</code>. The source (other than for system calls) is in <code class="language-plaintext highlighter-rouge">user/ulib.c</code>, <code class="language-plaintext highlighter-rouge">user/printf.c</code> and <code class="language-plaintext highlighter-rouge">user/umalloc.c</code>.</li>
+</ul>
+
+<h4 id="sample-execution">Sample Execution</h4>
+
+<p>Your solution should be in the file <code class="language-plaintext highlighter-rouge">user/detective.c</code>.</p>
+
+<p>Once you’ve done, add your <strong>detective</strong> program to <code class="language-plaintext highlighter-rouge">UPROGS</code> in <code class="language-plaintext highlighter-rouge">Makefile</code> and compile the kernel with <code class="language-plaintext highlighter-rouge">make qemu</code>.</p>
+
+<p>Run the program from the <strong>xv6</strong> shell and it should produce the following output:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>make qemu
+...
+init: starting sh
+<span class="nv">$ </span>detective <span class="nb">cat
+</span>4 as Watson: ./cat
+3 as Holmes: This is the evidence
+<span class="nv">$ </span>detective dog
+3 as Holmes: This is the alibi
+<span class="nv">$ </span>
+</code></pre></div></div>
+
+<h4 id="submission">Submission</h4>
+
+<p>Push your <strong>xv6</strong> source code to GitHub. Never push any other we do not request, such as <code class="language-plaintext highlighter-rouge">.o</code>, <code class="language-plaintext highlighter-rouge">.d</code>, <code class="language-plaintext highlighter-rouge">.asm</code> files. You can run <code class="language-plaintext highlighter-rouge">make clean</code> in container before you push. Make sure your <strong>xv6</strong> can be compiled.</p>
+
+<p>Your final repository should look like following hierarchy:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Repository
+└── xv6
+    ├── user
+    │   ├── detective.c
+    │   └── ...
+    ├── Makefile
+    └── ...
+</code></pre></div></div>
+
+<ul>
+  <li>You will get 0 if <strong>xv6</strong> cannot be compiled.</li>
+  <li>We might give discount on your grade if your format is wrong, such as pushing <code class="language-plaintext highlighter-rouge">.o</code> files.</li>
+</ul>
+
+<h2 id="reference">Reference</h2>
+
+<ul>
+  <li>xv6, a simple Unix-like teaching operating system<br />
+<a href="https://pdos.csail.mit.edu/6.828/2012/xv6.html">https://pdos.csail.mit.edu/6.828/2012/xv6.html</a></li>
+  <li>Docker: Empowering App Development for Developers<br />
+<a href="https://docs.docker.com/">https://docs.docker.com/</a></li>
+  <li>RISC-V: The Free and Open RISC Instruction Set Architecture<br />
+<a href="https://riscv.org/">https://riscv.org/</a></li>
+  <li>QEMU, the FAST! processor emulator<br />
+<a href="https://www.qemu.org/">https://www.qemu.org/</a></li>
+</ul>
+
+
+      <footer class="site-footer">
+        
+          <p class="copyright">Operating System 2021 Machine Problem Site maintained by <a href="https://github.com/OperatingSystemsAtNTU">OperatingSystemsAtNTU</a></p>
+        
+      </footer>
+    </main>
+  </body>
+</html>
+
