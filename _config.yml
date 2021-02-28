@@ -3,4 +3,4 @@ description: The site provides the information for machine problems for Operatin
 github.is_project_page: false
 show_downloads: false
 google_analytics:
-theme: jekyll-theme-slate
+theme: jekyll-theme-cayman
