@@ -9,6 +9,8 @@ In this MP, you will learn how to set up the environment for **xv6**.
 
 ## 1. Install Docker
 
+**(Update)** *If your platform is **Windows**, we strongly recommend you follow the instructions in [Coding in Windows 10](https://kaoshengchieh.github.io/coding-in-windows/) to set up the environment, regardless of whether you have installed Docker.
+
 ### Why Docker
 
 In order to run another OS on your machine, you need **virtualization**.
