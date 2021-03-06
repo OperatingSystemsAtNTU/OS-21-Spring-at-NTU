@@ -6,7 +6,7 @@ In this homework, you'll learn about how to create a user-level thread package w
 
 
 
-### 1.Description
+###1. Description
 In this homework, you need to implement a **user-level** thread package. The threads explicitly yield when they no longer require CPU time and they won't be interrupted by any other means. When a thread yields or exits, the next thread should run. To choose the next thread to run, simply keep the threads in a circular linked list and pick the next one.
 
 You'll need to implement the following functions: 
@@ -64,7 +64,7 @@ Each threads should be represented by a `struct thread` which at least contains 
 	
 	- None
 	
-	This function suspends the current thread by saving its context to the `jmp_buf` in `struct thread` using `setjmp`.[\[2\]](#footnote) The `setjmp` in xv6 is provided to you, you only need to add `#include "user/setjmp.h"` to your code. After saving the context, you should call `schedule` function to determine which thread to run next and then call `dispatch` to execute the new thread. If the thread is resumed later, `thread_yield` should return to the calling place in the function.
+	This function suspends the current thread by saving its context to the `jmp_buf` in `struct thread` using `setjmp`.[\[2\]](###7.-Footnote) The `setjmp` in xv6 is provided to you, you only need to add `#include "user/setjmp.h"` to your code. After saving the context, you should call `schedule` function to determine which thread to run next and then call `dispatch` to execute the new thread. If the thread is resumed later, `thread_yield` should return to the calling place in the function.
 
 4. `void thread_exit(void)`
 	
@@ -122,7 +122,7 @@ Each threads should be represented by a `struct thread` which at least contains 
 
 > The skeleton of `threads.c` is provided to you. Please complete the functions in `threads.c`.
 
-### 2. Before coding
+###2. Before coding
 1. Pull directly from Docker Hub  
 
 	```bash
@@ -138,10 +138,10 @@ You will use the skeleton of `threads.h` and `threads.c` provided in `xv6-riscv/
 
 Make sure you are familiar with the concept of stack frame and stack pointer taught in System Programming. It is also recommended to checkout the appendix given.
 
-### 3. Before Compiling
+###3. Before Compiling
 Uncomment line 145-147 in `Makefile` to compile `mp1.c` and `threads.c`
 
-### 4. Sample Execution
+###4. Sample Execution
 We provide you a public test case`mp1.c` to test out your thread package. It includes a main function and some thread functions. 
 
 For grading, we will be using other 3 sets of private test cases. It is recommended to add extra cases to ensure the correctness of your programs.
@@ -179,11 +179,11 @@ thread 2: 8
 thread 1: 109
 thread 2: 9
 
-exited
+exited 
 $
 ```
 
-### 5. Grading
+###5. Grading
 - Programming: 70%
 	
 	There are 4 test cases: 1 public and 3 private
@@ -195,7 +195,7 @@ $
 	Please explain how you implement each function briefly in at most two pages  
 	Each function accounts for 6%
 
-### 6. Submission
+###6. Submission
 Push your `xv6-riscv` source code to GitHub. Never push any other we do not request, such as `.o`, `.d`, `.asm` files. You can run `make clean` in container before you push. Make sure your `xv6-riscv` can be compiled and the thread package files, i.e., `threads.c` and `threads.h` are included.
 
 ```
@@ -212,11 +212,11 @@ Repository
 * You will get **0** if `xv6-riscv` cannot be compiled.
 * We might give discount on your grade if your format is wrong, such as pushing `.o` files.
 
-### 7. Footnote
+###7. Footnote
 
-[1]: The reason why we need the address of the stack pointer to be divisable by 8 is the architecture of xv6 is rv64 (RISC V 64 bits). The 64-bit architecture has a memory layout aligned by 8 bytes.
+\[1\]: The reason why we need the address of the stack pointer to be divisable by 8 is the architecture of xv6 is rv64 (RISC V 64 bits). The 64-bit architecture has a memory layout aligned by 8 bytes.
 
-[2]: `setjmp` sets up the local jmp_buf buffer and initializes it for the jump. This routine saves the program's calling environment in the environment buffer specified by the env argument for later use by longjmp. If the return is from a direct invocation, setjmp returns 0. If the return is from a call to longjmp, setjmp returns a nonzero value. [Wiki-setjmp.h](https://en.wikipedia.org/wiki/Setjmp.h)
+\[2\]: `setjmp` sets up the local jmp_buf buffer and initializes it for the jump. This routine saves the program's calling environment in the environment buffer specified by the env argument for later use by longjmp. If the return is from a direct invocation, setjmp returns 0. If the return is from a call to longjmp, setjmp returns a nonzero value. [Wiki-setjmp.h](https://en.wikipedia.org/wiki/Setjmp.h)
 
 ### 8. Appendix
 Here are some references that might come in handy.
