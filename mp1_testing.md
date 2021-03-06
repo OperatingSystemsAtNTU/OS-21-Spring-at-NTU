@@ -214,7 +214,7 @@ Repository
 * We might give discount on your grade if your format is wrong, such as pushing `.o` files.
 
 #### Report
-Use the entry code 86KX77 to sign up Gradescope: [Link](https://www.gradescope.com/courses/234104)  
+Use the entry code `86KX77` to sign up Gradescope: [Link](https://www.gradescope.com/courses/234104)  
 
 If possible, use traditional Chinese characters for your name and use upper-cases for your student ID.
 ### 7.Footnote
