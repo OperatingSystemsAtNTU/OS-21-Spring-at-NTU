@@ -39,7 +39,7 @@ Each threads should be represented by a `struct thread` which at least contains 
 	
 	This function should create a new thread and allocate the space in stack to the thread. 
 	
-	Note, if you would like to allocate a new stack for the thread, it is important that the address of the stack pointer should be divisable by 8.[\[1\]](#footnote) The function returns the initialized structure. **If you want to use your own template for creating thread, make sure it works for the provided test case.**
+	Note, if you would like to allocate a new stack for the thread, it is important that the address of the stack pointer should be divisable by 8.[\[1\]](#7footnote) The function returns the initialized structure. **If you want to use your own template for creating thread, make sure it works for the provided test case.**
 
 
 2. `void thread_add_runqueue(struct thread *t)`  
@@ -64,7 +64,7 @@ Each threads should be represented by a `struct thread` which at least contains 
 	
 	- None
 	
-	This function suspends the current thread by saving its context to the `jmp_buf` in `struct thread` using `setjmp`.[\[2\]](#7.Footnote) The `setjmp` in xv6 is provided to you, you only need to add `#include "user/setjmp.h"` to your code. After saving the context, you should call `schedule` function to determine which thread to run next and then call `dispatch` to execute the new thread. If the thread is resumed later, `thread_yield` should return to the calling place in the function.
+	This function suspends the current thread by saving its context to the `jmp_buf` in `struct thread` using `setjmp`.[\[2\]](#7footnote) The `setjmp` in xv6 is provided to you, you only need to add `#include "user/setjmp.h"` to your code. After saving the context, you should call `schedule` function to determine which thread to run next and then call `dispatch` to execute the new thread. If the thread is resumed later, `thread_yield` should return to the calling place in the function.
 
 4. `void thread_exit(void)`
 	
@@ -196,6 +196,7 @@ $
 	Each function accounts for 6%
 
 ### 6.Submission
+#### Programming
 Push your `xv6-riscv` source code to GitHub. Never push any other we do not request, such as `.o`, `.d`, `.asm` files. You can run `make clean` in container before you push. Make sure your `xv6-riscv` can be compiled and the thread package files, i.e., `threads.c` and `threads.h` are included.
 
 ```
@@ -212,6 +213,10 @@ Repository
 * You will get **0** if `xv6-riscv` cannot be compiled.
 * We might give discount on your grade if your format is wrong, such as pushing `.o` files.
 
+#### Report
+Use the entry code 86KX77 to sign up Gradescope: [Link](https://www.gradescope.com/courses/234104)  
+
+If possible, use traditional Chinese characters for your name and use upper-cases for your student ID.
 ### 7.Footnote
 
 \[1\]: The reason why we need the address of the stack pointer to be divisable by 8 is the architecture of xv6 is rv64 (RISC V 64 bits). The 64-bit architecture has a memory layout aligned by 8 bytes.
