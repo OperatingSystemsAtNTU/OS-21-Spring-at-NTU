@@ -64,7 +64,7 @@ Each threads should be represented by a `struct thread` which at least contains 
 	
 	- None
 	
-	This function suspends the current thread by saving its context to the `jmp_buf` in `struct thread` using `setjmp`.[\[2\]](###7.Footnote) The `setjmp` in xv6 is provided to you, you only need to add `#include "user/setjmp.h"` to your code. After saving the context, you should call `schedule` function to determine which thread to run next and then call `dispatch` to execute the new thread. If the thread is resumed later, `thread_yield` should return to the calling place in the function.
+	This function suspends the current thread by saving its context to the `jmp_buf` in `struct thread` using `setjmp`.[\[2\]](#7.Footnote) The `setjmp` in xv6 is provided to you, you only need to add `#include "user/setjmp.h"` to your code. After saving the context, you should call `schedule` function to determine which thread to run next and then call `dispatch` to execute the new thread. If the thread is resumed later, `thread_yield` should return to the calling place in the function.
 
 4. `void thread_exit(void)`
 	
