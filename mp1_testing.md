@@ -180,7 +180,7 @@ thread 1: 109
 thread 2: 9
 
 exited 
-$
+$ 
 ```
 
 ### 5.Grading
