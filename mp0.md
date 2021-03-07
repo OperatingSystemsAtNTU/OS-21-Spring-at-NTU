@@ -282,7 +282,7 @@ $ detective cat
 4 as Watson: ./cat
 3 as Holmes: This is the evidence
 $ detective dog
-3 as Holmes: This is the alibi
+5 as Holmes: This is the alibi
 $ 
 ```
 
