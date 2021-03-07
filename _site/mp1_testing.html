@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+
+    
+    <meta charset="UTF-8">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>MP1 Thread Package | OS-21-Spring-at-NTU</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="MP1 Thread Package" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Github Course Site for Operating Systems 2021 at National Taiwan University" />
+<meta property="og:description" content="Github Course Site for Operating Systems 2021 at National Taiwan University" />
+<link rel="canonical" href="http://localhost:4000/mp1_testing.html" />
+<meta property="og:url" content="http://localhost:4000/mp1_testing.html" />
+<meta property="og:site_name" content="OS-21-Spring-at-NTU" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="MP1 Thread Package" />
+<script type="application/ld+json">
+{"@type":"WebPage","headline":"MP1 Thread Package","url":"http://localhost:4000/mp1_testing.html","description":"Github Course Site for Operating Systems 2021 at National Taiwan University","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="/assets/css/style.css?v=bf7f4b969d792af440f3f7cbd735ec2fae3cadc4">
+  </head>
+  <body>
+    <a id="skip-to-content" href="#content">Skip to the content.</a>
+
+    <header class="page-header" role="banner">
+      <h1 class="project-name">Operating System 2021 Machine Problem Site</h1>
+      <h2 class="project-tagline">The site provides the information for machine problems for Operating System Course offerred in Spring 2021 at National Taiwan University</h2>
+    </header>
+
+    <main id="content" class="main-content" role="main">
+      <h1 id="mp1-thread-package">MP1 Thread Package</h1>
+
+<p>In this homework, you’ll learn about how to create a user-level thread package with the help of <code class="language-plaintext highlighter-rouge">setjmp</code> and <code class="language-plaintext highlighter-rouge">longjmp</code>.</p>
+
+<h2 id="1-description">1. Description</h2>
+
+<p>In this homework, you need to implement a <strong>user-level</strong> thread package. The threads explicitly yield when they no longer require CPU time and they won’t be interrupted by any other means. When a thread yields or exits, the next thread should run. To choose the next thread to run, simply keep the threads in a circular linked list and pick the next one.</p>
+
+<p>You’ll need to implement the following functions:</p>
+
+<ul>
+  <li>thread_add_runqueue</li>
+  <li>thread_yield</li>
+  <li>thread_exit</li>
+  <li>dispatch</li>
+  <li>thread_start_threading</li>
+</ul>
+
+<p>The following functions has been implemented for you:</p>
+
+<ul>
+  <li>thread_create</li>
+  <li>schedule</li>
+</ul>
+
+<p>Each threads should be represented by a <code class="language-plaintext highlighter-rouge">struct thread</code> which at least contains a function pointer to the thread’s function and a pointer of type <code class="language-plaintext highlighter-rouge">void *</code> as the function parameters. The function of the thread will take the <code class="language-plaintext highlighter-rouge">void *</code> as it’s argument when executed. The struct should contain a pointer to its stack and a <code class="language-plaintext highlighter-rouge">jmp_buf</code> to store it’s current state when <code class="language-plaintext highlighter-rouge">thread_yield</code> is called.</p>
+
+<blockquote>
+  <p>It should be enough to use only <code class="language-plaintext highlighter-rouge">setjmp</code> and <code class="language-plaintext highlighter-rouge">longjmp</code> to save and restore the context of a thread.</p>
+</blockquote>
+
+<ol>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">struct thread *thread_create(void (*f)(void *), void *arg)</code></p>
+
+    <p>Input:</p>
+
+    <ul>
+      <li>a funtion pointer <code class="language-plaintext highlighter-rouge">*thread_create(void (*f)(void *)</code></li>
+      <li>arguments of the function <code class="language-plaintext highlighter-rouge">void* arg</code></li>
+    </ul>
+
+    <p>Return:</p>
+
+    <ul>
+      <li>new thread <code class="language-plaintext highlighter-rouge">struct thread</code></li>
+    </ul>
+
+    <p>This function should create a new thread and allocate the space in stack to the thread.</p>
+
+    <p>Note, if you would like to allocate a new stack for the thread, it is important that the address of the stack pointer should be divisable by 8.<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote">1</a></sup> The function returns the initialized structure. <strong>If you want to use your own template for creating thread, make sure it works for the provided test case.</strong></p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">void thread_add_runqueue(struct thread *t)</code></p>
+
+    <p>Input:</p>
+
+    <ul>
+      <li>a thread pointer <code class="language-plaintext highlighter-rouge">struct thread *t</code></li>
+    </ul>
+
+    <p>Return:</p>
+
+    <ul>
+      <li>None</li>
+    </ul>
+
+    <p>This function adds an initialized <code class="language-plaintext highlighter-rouge">struct thread</code> to the runqueue. To implement the scheduling functionality, you’ll need to maintain a circular linked list of <code class="language-plaintext highlighter-rouge">struct thread</code>. You should implement that by maintaining the <code class="language-plaintext highlighter-rouge">next</code> and <code class="language-plaintext highlighter-rouge">previous</code> field in <code class="language-plaintext highlighter-rouge">struct thread</code> which always points to the next to-be-executed thread and the previously executed thread respectively. You should also maintain the static variable <code class="language-plaintext highlighter-rouge">struct thread *current_thread</code> that always points to the currently executed thread. Note: Please insert the new thread at the end of the runqueue, i.e. the newly inserted thread should be <code class="language-plaintext highlighter-rouge">current_thread-&gt;previous</code>.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">void thread_yield(void)</code></p>
+
+    <p>Input:</p>
+
+    <ul>
+      <li>None</li>
+    </ul>
+
+    <p>Return:</p>
+
+    <ul>
+      <li>None</li>
+    </ul>
+
+    <p>This function suspends the current thread by saving its context to the <code class="language-plaintext highlighter-rouge">jmp_buf</code> in <code class="language-plaintext highlighter-rouge">struct thread</code> using <code class="language-plaintext highlighter-rouge">setjmp</code>.<sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote">2</a></sup> The <code class="language-plaintext highlighter-rouge">setjmp</code> in xv6 is provided to you, you only need to add <code class="language-plaintext highlighter-rouge">#include "user/setjmp.h"</code> to your code. After saving the context, you should call <code class="language-plaintext highlighter-rouge">schedule</code> function to determine which thread to run next and then call <code class="language-plaintext highlighter-rouge">dispatch</code> to execute the new thread. If the thread is resumed later, <code class="language-plaintext highlighter-rouge">thread_yield</code> should return to the calling place in the function.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">void thread_exit(void)</code></p>
+
+    <p>Input:</p>
+
+    <ul>
+      <li>None</li>
+    </ul>
+
+    <p>Return:</p>
+
+    <ul>
+      <li>None</li>
+    </ul>
+
+    <p>This function removes the calling thread from the runqueue, frees its stack and the <code class="language-plaintext highlighter-rouge">struct thread</code>, updates the <code class="language-plaintext highlighter-rouge">current_thread</code> variable with the next to-be-executed thread in the runqueue and calls <code class="language-plaintext highlighter-rouge">dispatch</code>.</p>
+
+    <p>Furthermore, think about what happens when the <strong>last</strong> thread exits (should return to main by some means).</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">void schedule(void)</code></p>
+
+    <p>Input:</p>
+
+    <ul>
+      <li>None</li>
+    </ul>
+
+    <p>Return:</p>
+
+    <ul>
+      <li>None</li>
+    </ul>
+
+    <p>This function will decide which thread to run next. It is actually trivial, since you will just run the next thread in the circular linked list of threads. You can simply change <code class="language-plaintext highlighter-rouge">current_thread</code> to the <code class="language-plaintext highlighter-rouge">next</code> field of <code class="language-plaintext highlighter-rouge">current_thread</code>.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">void dispatch(void)</code></p>
+
+    <p>Input:</p>
+
+    <ul>
+      <li>None</li>
+    </ul>
+
+    <p>Return:</p>
+
+    <ul>
+      <li>None</li>
+    </ul>
+
+    <p>This function will execute a thread, decided by <code class="language-plaintext highlighter-rouge">schedule</code>.</p>
+
+    <p>In case the thread has never run before, you may need to do some initialization such as moving the stack pointer <code class="language-plaintext highlighter-rouge">sp</code> to the allocated stack of the thread. The stack pointer <code class="language-plaintext highlighter-rouge">sp</code> could be accessed and modified using <code class="language-plaintext highlighter-rouge">setjmp</code> and <code class="language-plaintext highlighter-rouge">longjmp</code>. Please take a look at <code class="language-plaintext highlighter-rouge">setjmp.h</code> to understand where the <code class="language-plaintext highlighter-rouge">sp</code> is stored in <code class="language-plaintext highlighter-rouge">jmp_buf</code>. If the thread was executed before, restoring the context with <code class="language-plaintext highlighter-rouge">longjmp</code> is enough.</p>
+
+    <p>In case the thread’s function just returns, the thread needs to be removed from the runqueue and the next one has to be dispatched. The easiest way to do this is calling <code class="language-plaintext highlighter-rouge">thread_exit</code>.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">void thread_start_threading(void)</code></p>
+
+    <p>Input:</p>
+
+    <ul>
+      <li>None</li>
+    </ul>
+
+    <p>Return:</p>
+
+    <ul>
+      <li>None</li>
+    </ul>
+
+    <p>This function will initialize the threading by calling <code class="language-plaintext highlighter-rouge">schedule</code> and <code class="language-plaintext highlighter-rouge">dispatch</code>. This function will be called by the main function after the first thread is added to the runqueue. It should return only if all threads exit.</p>
+  </li>
+</ol>
+
+<blockquote>
+  <p>The skeleton of <code class="language-plaintext highlighter-rouge">threads.c</code> is provided to you. Please complete the functions in <code class="language-plaintext highlighter-rouge">threads.c</code>.</p>
+</blockquote>
+
+<h2 id="2-before-coding">2. Before coding</h2>
+
+<ol>
+  <li>
+    <p>Pull directly from Docker Hub</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nv">$ </span>docker pull ntuos/mp1
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Download the <code class="language-plaintext highlighter-rouge">xv6-riscv</code> folder from github repository named <code class="language-plaintext highlighter-rouge">mp1</code> and enter the folder that contains <code class="language-plaintext highlighter-rouge">xv6-riscv</code>, then run the following command to mount the <code class="language-plaintext highlighter-rouge">xv6-riscv</code> folder to docker container.</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker run <span class="nt">-u</span> <span class="si">$(</span><span class="nb">id</span> <span class="nt">-u</span><span class="si">)</span>:<span class="si">$(</span><span class="nb">id</span> <span class="nt">-g</span><span class="si">)</span> <span class="nt">-it</span> <span class="nt">-v</span> <span class="si">$(</span><span class="nb">pwd</span><span class="si">)</span>/xv6-riscv:/home/ ntuos/mp1 bash
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p>You will use the skeleton of <code class="language-plaintext highlighter-rouge">threads.h</code> and <code class="language-plaintext highlighter-rouge">threads.c</code> provided in <code class="language-plaintext highlighter-rouge">xv6-riscv/user</code> folder.</p>
+
+<p>Make sure you are familiar with the concept of stack frame and stack pointer taught in System Programming. It is also recommended to checkout the appendix given.</p>
+
+<h2 id="3-before-compiling">3. Before Compiling</h2>
+
+<p>Uncomment line 145-147 in <code class="language-plaintext highlighter-rouge">Makefile</code> to compile <code class="language-plaintext highlighter-rouge">mp1.c</code> and <code class="language-plaintext highlighter-rouge">threads.c</code></p>
+
+<h2 id="4-sample-execution">4. Sample Execution</h2>
+
+<p>We provide you a public test case<code class="language-plaintext highlighter-rouge">mp1.c</code> to test out your thread package. It includes a main function and some thread functions.</p>
+
+<p>For grading, we will be using other 3 sets of private test cases. It is recommended to add extra cases to ensure the correctness of your programs.</p>
+
+<p>The output of <code class="language-plaintext highlighter-rouge">mp1.c</code> should look like the following:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>make qemu
+...
+init: starting sh
+<span class="nv">$ </span>mp1
+thread 1: 100
+thread 2: 0
+thread 3: 10000
+thread 1: 101
+thread 2: 1
+thread 3: 10001
+thread 1: 102
+thread 2: 2
+thread 3: 10002
+thread 1: 103
+thread 2: 3
+thread 3: 10003
+thread 1: 104
+thread 2: 4
+thread 3: 10004
+thread 1: 105
+thread 2: 5
+thread 1: 106
+thread 2: 6
+thread 1: 107
+thread 2: 7
+thread 1: 108
+thread 2: 8
+thread 1: 109
+thread 2: 9
+
+exited 
+<span class="nv">$ </span>
+</code></pre></div></div>
+
+<h2 id="5-grading">5. Grading</h2>
+
+<ul>
+  <li>
+    <p>Programming: 70%</p>
+
+    <p>There are 4 test cases: 1 public and 3 private</p>
+
+    <p>Public test case <code class="language-plaintext highlighter-rouge">mp1.c</code>: 10%
+  Private test cases: 20% each</p>
+  </li>
+  <li>
+    <p>Report: 30%  (Temporary)
+  Please explain how you implement each function briefly in at most two pages
+  Each function accounts for 6%</p>
+  </li>
+</ul>
+
+<h2 id="6-submission">6. Submission</h2>
+
+<h3 id="programming">Programming</h3>
+
+<p>Push your <code class="language-plaintext highlighter-rouge">xv6-riscv</code> source code to GitHub. Never push any other we do not request, such as <code class="language-plaintext highlighter-rouge">.o</code>, <code class="language-plaintext highlighter-rouge">.d</code>, <code class="language-plaintext highlighter-rouge">.asm</code> files. You can run <code class="language-plaintext highlighter-rouge">make clean</code> in container before you push. Make sure your <code class="language-plaintext highlighter-rouge">xv6-riscv</code> can be compiled and the thread package files, i.e., <code class="language-plaintext highlighter-rouge">threads.c</code> and <code class="language-plaintext highlighter-rouge">threads.h</code> are included.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Repository
+└── xv6-riscv
+    ├── user
+    │   ├── threads.c
+    │   ├── threads.h   
+    │   └── ...
+    ├── Makefile
+    └── ...
+</code></pre></div></div>
+
+<ul>
+  <li>You will get <strong>0</strong> if <code class="language-plaintext highlighter-rouge">xv6-riscv</code> cannot be compiled.</li>
+  <li>We might give discount on your grade if your format is wrong, such as pushing <code class="language-plaintext highlighter-rouge">.o</code> files.</li>
+</ul>
+
+<h3 id="report">Report</h3>
+
+<p>Use the entry code <code class="language-plaintext highlighter-rouge">86KX77</code> to sign up Gradescope: <a href="https://www.gradescope.com/courses/234104">Link</a></p>
+
+<p>If possible, use traditional Chinese characters for your name and use upper-cases for your student ID.</p>
+
+<h2 id="7-appendix">7. Appendix</h2>
+
+<p>Here are some references that might come in handy.</p>
+
+<h3 id="function-pointer">Function Pointer</h3>
+
+<p><a href="https://en.wikipedia.org/wiki/Function_pointer">Function Pointer - Wiki</a>.</p>
+
+<h3 id="call-stack">Call Stack</h3>
+
+<p><a href="https://en.wikipedia.org/wiki/Call_stack">Call Stack - Wiki</a>.</p>
+
+<h3 id="x86_64-inline-assembly-gcc">x86_64 inline assembly (gcc)</h3>
+
+<p><a href="https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html">Asm Documentation</a>.</p>
+
+<ul>
+  <li>Access stack pointer (placed into <code class="language-plaintext highlighter-rouge">stack_p</code>):</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">stack_p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">asm</span><span class="p">(</span><span class="s">"mov %%rsp, %0;"</span>
+    <span class="o">:</span> <span class="s">"=r"</span> <span class="p">(</span><span class="n">stack_p</span><span class="p">));</span>
+</code></pre></div></div>
+<ul>
+  <li>Write stack pointer (value from <code class="language-plaintext highlighter-rouge">new_stack_p</code>):</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">new_stack_p</span><span class="p">;</span>
+<span class="n">asm</span><span class="p">(</span><span class="s">"mov %0, %%rsp;"</span>
+         <span class="o">:</span>
+         <span class="o">:</span> <span class="s">"r"</span> <span class="p">(</span><span class="n">new_stack_p</span><span class="p">));</span>
+</code></pre></div></div>
+
+<h2 id="8-debugging">8. Debugging</h2>
+<p>It is recommended to first use gdb (with enhancement such as <a href="https://gef.readthedocs.io/en/master/">gdb-gef</a>) to debug the program on x86 machine. The x86_64 version skeleton codes are available under <code class="language-plaintext highlighter-rouge">x86_64_release</code>.</p>
+
+<h2 id="9-footnote">9. Footnote</h2>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>The reason why we need the address of the stack pointer to be divisable by 8 is the architecture of xv6 is rv64 (RISC V 64 bits). The 64-bit architecture has a memory layout aligned by 8 bytes. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:2" role="doc-endnote">
+      <p><code class="language-plaintext highlighter-rouge">setjmp</code> sets up the local jmp_buf buffer and initializes it for the jump. This routine saves the program’s calling environment in the environment buffer specified by the env argument for later use by longjmp. If the return is from a direct invocation, setjmp returns 0. If the return is from a call to longjmp, setjmp returns a nonzero value. <a href="https://en.wikipedia.org/wiki/Setjmp.h">Wiki-setjmp.h</a> <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+
+      <footer class="site-footer">
+        
+          <p class="copyright">Operating System 2021 Machine Problem Site maintained by <a href="https://github.com/OperatingSystemsAtNTU">OperatingSystemsAtNTU</a></p>
+        
+      </footer>
+    </main>
+  </body>
+</html>
+
