@@ -132,7 +132,6 @@ Each threads should be represented by a `struct thread` which at least contains 
 ```bash
 $ docker run -u $(id -u):$(id -g) -it -v $(pwd)/xv6-riscv:/home/ ntuos/mp1 bash
 ```
-> For windows users, please open docker desktop and **run the command in WSL**
 
 You will use the skeleton of `threads.h` and `threads.c` provided in `xv6-riscv/user` folder.
 
@@ -191,14 +190,12 @@ $
 	
 	There are 4 test cases: 1 public and 3 private
 	
-	1. Public test case `mp1.c`: 25%  
-	2. Private test cases: 15% each
+	Public test case `mp1.c`: 10%
+	Private test cases: 20% each
 
-- Handwritting: 30%  
-	There are three parts of handwritting homework, and two questions for each part.  
-	1. In first two parts, you only need to answer in 1~3 sentences.  
-	2. For the 3rd part, you need to write simple programs, and answer the question based on your observation.
-
+- Report: 30%  (Temporary)
+	Please explain how you implement each function briefly in at most two pages
+	Each function accounts for 6%
 
 ## 6. Submission
 
@@ -220,8 +217,7 @@ Repository
 * You will get **0** if `xv6-riscv` cannot be compiled.
 * We might give discount on your grade if your format is wrong, such as pushing `.o` files.
 
-
-### Handwritting 
+### Report
 
 Use the entry code `86KX77` to sign up Gradescope: [Link](https://www.gradescope.com/courses/234104)
 
