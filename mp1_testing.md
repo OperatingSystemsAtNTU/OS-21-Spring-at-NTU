@@ -1,7 +1,9 @@
-MP1 Thread Package
+MP1 Thread Package (Due March 30 at 09:00)
 ===
+> This website focuses on details of programming homework. For handwriting part, please download the questions from NTU Cool and submit the answers via Gradescope.
 
-In this homework, you'll learn about how to create a user-level thread package with the help of `setjmp` and `longjmp`.
+
+In this programming homework, you'll try to create a user-level thread package with the help of `setjmp` and `longjmp`.
 
 ## 1. Description
 
@@ -195,9 +197,8 @@ $
 	2. Private test cases: 15% each
 
 - Handwritting: 30%  
-	There are three parts of handwritting homework, and two questions for each part.  
-	1. In first two parts, you only need to answer in 1~3 sentences.  
-	2. For the 3rd part, you need to write simple programs, and answer the question based on your observation.
+	There are three questions in handwritting assignment.  
+	* For some questions, writing a simple code may help
 
 
 ## 6. Submission
@@ -225,7 +226,7 @@ Repository
 
 Use the entry code `86KX77` to sign up Gradescope: [Link](https://www.gradescope.com/courses/234104)
 
-If possible, use traditional Chinese characters for your name and use upper-cases for your student ID.
+Use **traditional Chinese characters** for your name and use **upper-cases** for your student ID.
 
 ## 7. Appendix
 
@@ -239,7 +240,7 @@ Here are some references that might come in handy.
 
 [Call Stack - Wiki](https://en.wikipedia.org/wiki/Call_stack).
 	
-### x86_64 inline assembly (gcc)
+### x86_64 inline assembly (gcc)       REMOVE??
 
 [Asm Documentation](https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html).
 	
