@@ -222,7 +222,7 @@ Repository
 * We might have discount on your grade if your format is wrong, such as pushing `.o` files.
 
 
-### Handwritting 
+### Handwriting 
 
 * Use the entry code `86KX77` to sign up Gradescope: [Link](https://www.gradescope.com/courses/234104)
 * Use **traditional Chinese characters** for your name and use **upper-cases** for your student ID.
@@ -245,19 +245,19 @@ Here are some references that might come in handy.
 	
 - Access stack pointer (placed into `stack_p`):
 
-```c
-unsigned long stack_p = 0;
-asm("mov %%rsp, %0;"
-    : "=r" (stack_p));
-```
+  ```c
+  unsigned long stack_p = 0;
+  asm("mov %%rsp, %0;"
+      : "=r" (stack_p));
+  ```
 - Write stack pointer (value from `new_stack_p`):
 
-```c
-unsigned long new_stack_p;
-asm("mov %0, %%rsp;"
-         :
-         : "r" (new_stack_p));
-```
+  ```c
+  unsigned long new_stack_p;
+  asm("mov %0, %%rsp;"
+           :
+           : "r" (new_stack_p));
+  ```
 
 ## 8. Debugging
 It is recommended to first use gdb (with enhancement such as [gdb-gef](https://gef.readthedocs.io/en/master/)) to debug the program on x86 machine. 
