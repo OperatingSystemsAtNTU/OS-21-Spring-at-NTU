@@ -193,15 +193,13 @@ $
 
 ## 5. Grading
 
-- Programming: 70%
-	
-	There are 4 test cases: 1 public and 3 private
-	
+- Programming: 70% \
+	There are 4 test cases: 1 public and 3 private\
 	1. Public test case `mp1.c`: 25%  
 	2. Private test cases: 15% each
 
-- Handwritting: 30%  
-	There are three questions in handwritting assignment.  
+- Handwriting: 30%  
+	There are three questions in handwritting assignment.\
 	* For some questions, writing a simple code may help
 
 
@@ -226,7 +224,7 @@ Repository
 * We might have discount on your grade if your format is wrong, such as pushing `.o` files.
 
 
-### Handwritting 
+### Handwriting 
 
 * Use the entry code `86KX77` to sign up Gradescope: [Link](https://www.gradescope.com/courses/234104)
 * Use **traditional Chinese characters** for your name and use **upper-cases** for your student ID.
@@ -249,19 +247,19 @@ Here are some references that might come in handy.
 	
 - Access stack pointer (placed into `stack_p`):
 
-```c
-unsigned long stack_p = 0;
-asm("mov %%rsp, %0;"
-    : "=r" (stack_p));
-```
+  ```c
+  unsigned long stack_p = 0;
+  asm("mov %%rsp, %0;"
+      : "=r" (stack_p));
+  ```
 - Write stack pointer (value from `new_stack_p`):
 
-```c
-unsigned long new_stack_p;
-asm("mov %0, %%rsp;"
-         :
-         : "r" (new_stack_p));
-```
+  ```c
+  unsigned long new_stack_p;
+  asm("mov %0, %%rsp;"
+           :
+           : "r" (new_stack_p));
+  ```
 
 ## 8. Debugging
 It is recommended to first use gdb (with enhancement such as [gdb-gef](https://gef.readthedocs.io/en/master/)) to debug the program on x86 machine. 
