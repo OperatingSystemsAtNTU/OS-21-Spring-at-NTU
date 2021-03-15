@@ -191,15 +191,13 @@ $
 
 ## 5. Grading
 
-- Programming: 70%
-	
-	There are 4 test cases: 1 public and 3 private
-	
+- Programming: 70% \
+	There are 4 test cases: 1 public and 3 private\
 	1. Public test case `mp1.c`: 25%  
 	2. Private test cases: 15% each
 
-- Handwritting: 30%  
-	There are three questions in handwritting assignment.  
+- Handwriting: 30%  
+	There are three questions in handwritting assignment.\
 	* For some questions, writing a simple code may help
 
 
