@@ -132,8 +132,10 @@ Each threads should be represented by a `struct thread` which at least contains 
 
 2. Download the `xv6-riscv` folder from github repository named `mp1` and enter the folder that contains `xv6-riscv`, then run the following command to mount the `xv6-riscv` folder to docker container. 
 ```bash
-$ docker run -u $(id -u):$(id -g) -it -v $(pwd)/xv6-riscv:/home/ ntuos/mp1 bash
+$ docker run -u $(id -u):$(id -g) -it -v $(pwd)/xv6-riscv:/home/ ntuos/mp1 bash  
 ```
+> You may find your user name in container be "I have no name!" or others.  
+Please ignore this issue, this doesn't affect your programming task.  
 > For windows users, please open docker desktop and **run the command in WSL**
 
 You will use the skeleton of `threads.h` and `threads.c` provided in `xv6-riscv/user` folder.
@@ -205,7 +207,7 @@ $
 
 ### Programming
 
-Push your `xv6-riscv` source code to GitHub. Never push any other we do not request, such as `.o`, `.d`, `.asm` files. You can run `make clean` in container before you push. Make sure your `xv6-riscv` can be compiled and the thread package files, i.e., `threads.c` and `threads.h` are included.
+Push your `xv6-riscv` source code to GitHub. **Never push any other files we do not request**, such as `.o`, `.d`, `.asm` files. You can run `make clean` in container before you push. Make sure your `xv6-riscv` can be compiled and the thread package files, i.e., `threads.c` and `threads.h` are included.
 
 ```
 Repository
@@ -219,20 +221,19 @@ Repository
 ```
 
 * You will get **0** if `xv6-riscv` cannot be compiled.
-* We might give discount on your grade if your format is wrong, such as pushing `.o` files.
+* We might have discount on your grade if your format is wrong, such as pushing `.o` files.
 
 
 ### Handwritting 
 
-Use the entry code `86KX77` to sign up Gradescope: [Link](https://www.gradescope.com/courses/234104)
-
-Use **traditional Chinese characters** for your name and use **upper-cases** for your student ID.
+* Use the entry code `86KX77` to sign up Gradescope: [Link](https://www.gradescope.com/courses/234104)
+* Use **traditional Chinese characters** for your name and use **upper-cases** for your student ID.
 
 ## 7. Appendix
 
 Here are some references that might come in handy.
 
-### Function Pointer
+### Function Pointer (Must know)
 
 [Function Pointer - Wiki](https://en.wikipedia.org/wiki/Function_pointer).
 	
