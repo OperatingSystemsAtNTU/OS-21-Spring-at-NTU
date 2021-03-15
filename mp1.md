@@ -122,19 +122,21 @@ Each threads should be represented by a `struct thread` which at least contains 
 
 > The skeleton of `threads.c` is provided to you. Please complete the functions in `threads.c`.
 
-## 2. Before coding
+## 2. Environment setup
+1. Clone the repo from Github Classroom
+  * [Link](https://classroom.github.com/a/MnXQ55xh)
 
-1. Pull directly from Docker Hub
+2. Pull docker image from Docker Hub
 
 	```bash
 	$ docker pull ntuos/mp1
 	```
 
-2. Download the `xv6-riscv` folder from github repository named `mp1` and enter the folder that contains `xv6-riscv`, then run the following command to mount the `xv6-riscv` folder to docker container. 
+3. Enter the repo and you will see a folder named `xv6-riscv`, then run the following command to mount the `xv6-riscv` folder to docker container. 
 ```bash
 $ docker run -u $(id -u):$(id -g) -it -v $(pwd)/xv6-riscv:/home/ ntuos/mp1 bash  
 ```
-> You may find your user name in container be "I have no name!" or others.  
+> After entering the container, you may find your user name in container be "I have no name!" or others.  
 Please ignore this issue, this doesn't affect your programming task.  
 > For windows users, please open docker desktop and **run the command in WSL**
 
