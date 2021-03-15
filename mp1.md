@@ -1,6 +1,6 @@
 MP1 Thread Package (Due March 30 at 09:00)
 ===
-> This website focuses on details of programming homework. For handwriting part, please download the questions from NTU Cool and submit the answers via Gradescope.
+> This website focuses on details of programming homework. For handwriting part, please download the questions from NTU COOL and submit the answers via Gradescope.
 
 
 In this programming homework, you'll try to create a user-level thread package with the help of `setjmp` and `longjmp`.
@@ -240,7 +240,7 @@ Here are some references that might come in handy.
 
 [Call Stack - Wiki](https://en.wikipedia.org/wiki/Call_stack).
 	
-### x86_64 inline assembly (gcc)       REMOVE??
+### x86_64 inline assembly (gcc)
 
 [Asm Documentation](https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html).
 	
@@ -261,7 +261,7 @@ asm("mov %0, %%rsp;"
 ```
 
 ## 8. Debugging
-It is recommended to first use gdb (with enhancement such as [gdb-gef](https://gef.readthedocs.io/en/master/)) to debug the program on x86 machine. The x86_64 version skeleton codes are available under `x86_64_release`.
+It is recommended to first use gdb (with enhancement such as [gdb-gef](https://gef.readthedocs.io/en/master/)) to debug the program on x86 machine. 
 
 ## 9. Footnote
 
