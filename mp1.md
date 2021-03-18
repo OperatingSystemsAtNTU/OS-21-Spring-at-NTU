@@ -207,7 +207,7 @@ $
 
 ### Programming
 
-Push your `xv6-riscv` source code to GitHub. **Never push any other files we do not request**, such as `.o`, `.d`, `.asm` files. You can run `make clean` in container before you push. Make sure your `xv6-riscv` can be compiled and the thread package files, i.e., `threads.c` and `threads.h` are included.
+Push your `xv6-riscv` source code to GitHub. <del>**Never push any other files we do not request**, such as `.o`, `.d`, `.asm` files.</del> You can run `make clean` in container before you push. Make sure your `xv6-riscv` can be compiled and the thread package files, i.e., `threads.c` and `threads.h` are included.
 
 ```
 Repository
@@ -220,9 +220,10 @@ Repository
     └── ...
 ```
 
-* You will get **0** if `xv6-riscv` cannot be compiled.
-* We might have discount on your grade if your format is wrong, such as pushing `.o` files.
+* You will get **0** if <del>`xv6-riscv`</del>**[Update 3/18] thread.c and thread.h** cannot be compiled.
+* <del>We might have discount on your grade if your format is wrong, such as pushing `.o` files.</del>  
 
+#### [Update 3/18] You can create new files in your repo, and your grade won't be affected. Just make sure to include thread.c and thread.h
 
 ### Handwriting 
 
