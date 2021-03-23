@@ -1,4 +1,4 @@
-Lab 2 Shared Memory
+MP2 - Shared Memory
 ===
 
 ## Description
