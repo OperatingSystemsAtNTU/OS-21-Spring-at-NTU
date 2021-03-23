@@ -1,7 +1,9 @@
-MP1 Thread Package
+MP1 Thread Package (Due March 30 at 09:00)
 ===
+> This website focuses on details of programming homework. For handwriting part, please download the questions from NTU COOL and submit the answers via Gradescope.
 
-In this homework, you'll learn about how to create a user-level thread package with the help of `setjmp` and `longjmp`.
+
+In this programming homework, you'll try to create a user-level thread package with the help of `setjmp` and `longjmp`.
 
 ## 1. Description
 
@@ -120,18 +122,23 @@ Each threads should be represented by a `struct thread` which at least contains 
 
 > The skeleton of `threads.c` is provided to you. Please complete the functions in `threads.c`.
 
-## 2. Before coding
+## 2. Environment setup
+1. Clone the repo from Github Classroom
+  * [Link](https://classroom.github.com/a/MnXQ55xh)
 
-1. Pull directly from Docker Hub
+2. Pull docker image from Docker Hub
 
 	```bash
 	$ docker pull ntuos/mp1
 	```
 
-2. Download the `xv6-riscv` folder from github repository named `mp1` and enter the folder that contains `xv6-riscv`, then run the following command to mount the `xv6-riscv` folder to docker container. 
+3. Enter the repo and you will see a folder named `xv6-riscv`, then run the following command to mount the `xv6-riscv` folder to docker container. 
 ```bash
-$ docker run -u $(id -u):$(id -g) -it -v $(pwd)/xv6-riscv:/home/ ntuos/mp1 bash
+$ docker run -u $(id -u):$(id -g) -it -v $(pwd)/xv6-riscv:/home/ ntuos/mp1 bash  
 ```
+> After entering the container, you may find your user name in container be "I have no name!" or others.  
+Please ignore this issue, this doesn't affect your programming task.  
+> For windows users, please open docker desktop and **run the command in WSL**
 
 You will use the skeleton of `threads.h` and `threads.c` provided in `xv6-riscv/user` folder.
 
@@ -186,22 +193,21 @@ $
 
 ## 5. Grading
 
-- Programming: 70%
-	
-	There are 4 test cases: 1 public and 3 private
-	
-	Public test case `mp1.c`: 10%
-	Private test cases: 20% each
+- Programming: 70% \
+	There are 4 test cases: 1 public and 3 private\
+	1. Public test case `mp1.c`: 25%  
+	2. Private test cases: 15% each
 
-- Report: 30%  (Temporary)
-	Please explain how you implement each function briefly in at most two pages
-	Each function accounts for 6%
+- Handwriting: 30%  
+	There are three questions in handwritting assignment.\
+	* For some questions, writing a simple code may help
+
 
 ## 6. Submission
 
 ### Programming
 
-Push your `xv6-riscv` source code to GitHub. Never push any other we do not request, such as `.o`, `.d`, `.asm` files. You can run `make clean` in container before you push. Make sure your `xv6-riscv` can be compiled and the thread package files, i.e., `threads.c` and `threads.h` are included.
+Push your `xv6-riscv` source code to GitHub. <del>**Never push any other files we do not request**, such as `.o`, `.d`, `.asm` files.</del> You can run `make clean` in container before you push. Make sure your `xv6-riscv` can be compiled and the thread package files, i.e., `threads.c` and `threads.h` are included.
 
 ```
 Repository
@@ -214,20 +220,21 @@ Repository
     └── ...
 ```
 
-* You will get **0** if `xv6-riscv` cannot be compiled.
-* We might give discount on your grade if your format is wrong, such as pushing `.o` files.
+* You will get **0** if <del>`xv6-riscv`</del>**[Update 3/18] thread.c and thread.h** cannot be compiled.
+* <del>We might have discount on your grade if your format is wrong, such as pushing `.o` files.</del>  
 
-### Report
+#### [Update 3/18] You can create new files in your repo, and your grade won't be affected. Just make sure to include thread.c and thread.h
 
-Use the entry code `86KX77` to sign up Gradescope: [Link](https://www.gradescope.com/courses/234104)
+### Handwriting 
 
-If possible, use traditional Chinese characters for your name and use upper-cases for your student ID.
+* Use the entry code `86KX77` to sign up Gradescope: [Link](https://www.gradescope.com/courses/234104)
+* Use **traditional Chinese characters** for your name and use **upper-cases** for your student ID.
 
 ## 7. Appendix
 
 Here are some references that might come in handy.
 
-### Function Pointer
+### Function Pointer (Must know)
 
 [Function Pointer - Wiki](https://en.wikipedia.org/wiki/Function_pointer).
 	
@@ -241,22 +248,22 @@ Here are some references that might come in handy.
 	
 - Access stack pointer (placed into `stack_p`):
 
-```c
-unsigned long stack_p = 0;
-asm("mov %%rsp, %0;"
-    : "=r" (stack_p));
-```
+  ```c
+  unsigned long stack_p = 0;
+  asm("mov %%rsp, %0;"
+      : "=r" (stack_p));
+  ```
 - Write stack pointer (value from `new_stack_p`):
 
-```c
-unsigned long new_stack_p;
-asm("mov %0, %%rsp;"
-         :
-         : "r" (new_stack_p));
-```
+  ```c
+  unsigned long new_stack_p;
+  asm("mov %0, %%rsp;"
+           :
+           : "r" (new_stack_p));
+  ```
 
 ## 8. Debugging
-It is recommended to first use gdb (with enhancement such as [gdb-gef](https://gef.readthedocs.io/en/master/)) to debug the program on x86 machine. The x86_64 version skeleton codes are available under `x86_64_release`.
+It is recommended to first use gdb (with enhancement such as [gdb-gef](https://gef.readthedocs.io/en/master/)) to debug the program on x86 machine. 
 
 ## 9. Footnote
 

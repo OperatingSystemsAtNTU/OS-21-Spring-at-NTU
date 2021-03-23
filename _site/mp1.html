@@ -6,25 +6,25 @@
     <meta charset="UTF-8">
 
 <!-- Begin Jekyll SEO tag v2.7.1 -->
-<title>MP1 Thread Package | OS-21-Spring-at-NTU</title>
+<title>MP1 Thread Package (Due March 30 at 09:00) | OS-21-Spring-at-NTU</title>
 <meta name="generator" content="Jekyll v3.9.0" />
-<meta property="og:title" content="MP1 Thread Package" />
+<meta property="og:title" content="MP1 Thread Package (Due March 30 at 09:00)" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Github Course Site for Operating Systems 2021 at National Taiwan University" />
 <meta property="og:description" content="Github Course Site for Operating Systems 2021 at National Taiwan University" />
-<link rel="canonical" href="http://localhost:4000/mp1_testing.html" />
-<meta property="og:url" content="http://localhost:4000/mp1_testing.html" />
+<link rel="canonical" href="http://localhost:4000/mp1.html" />
+<meta property="og:url" content="http://localhost:4000/mp1.html" />
 <meta property="og:site_name" content="OS-21-Spring-at-NTU" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="MP1 Thread Package" />
+<meta property="twitter:title" content="MP1 Thread Package (Due March 30 at 09:00)" />
 <script type="application/ld+json">
-{"@type":"WebPage","headline":"MP1 Thread Package","url":"http://localhost:4000/mp1_testing.html","description":"Github Course Site for Operating Systems 2021 at National Taiwan University","@context":"https://schema.org"}</script>
+{"@type":"WebPage","headline":"MP1 Thread Package (Due March 30 at 09:00)","url":"http://localhost:4000/mp1.html","description":"Github Course Site for Operating Systems 2021 at National Taiwan University","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#157878">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="stylesheet" href="/assets/css/style.css?v=bf7f4b969d792af440f3f7cbd735ec2fae3cadc4">
+    <link rel="stylesheet" href="/assets/css/style.css?v=53ab31e9513b2ef72522d4a5c65d7c69118baaec">
   </head>
   <body>
     <a id="skip-to-content" href="#content">Skip to the content.</a>
@@ -35,9 +35,12 @@
     </header>
 
     <main id="content" class="main-content" role="main">
-      <h1 id="mp1-thread-package">MP1 Thread Package</h1>
+      <h1 id="mp1-thread-package-due-march-30-at-0900">MP1 Thread Package (Due March 30 at 09:00)</h1>
+<blockquote>
+  <p>This website focuses on details of programming homework. For handwriting part, please download the questions from NTU COOL and submit the answers via Gradescope.</p>
+</blockquote>
 
-<p>In this homework, you’ll learn about how to create a user-level thread package with the help of <code class="language-plaintext highlighter-rouge">setjmp</code> and <code class="language-plaintext highlighter-rouge">longjmp</code>.</p>
+<p>In this programming homework, you’ll try to create a user-level thread package with the help of <code class="language-plaintext highlighter-rouge">setjmp</code> and <code class="language-plaintext highlighter-rouge">longjmp</code>.</p>
 
 <h2 id="1-description">1. Description</h2>
 
@@ -201,19 +204,27 @@
   <p>The skeleton of <code class="language-plaintext highlighter-rouge">threads.c</code> is provided to you. Please complete the functions in <code class="language-plaintext highlighter-rouge">threads.c</code>.</p>
 </blockquote>
 
-<h2 id="2-before-coding">2. Before coding</h2>
-
+<h2 id="2-environment-setup">2. Environment setup</h2>
 <ol>
+  <li>Clone the repo from Github Classroom
+    <ul>
+      <li><a href="https://classroom.github.com/a/MnXQ55xh">Link</a></li>
+    </ul>
+  </li>
   <li>
-    <p>Pull directly from Docker Hub</p>
+    <p>Pull docker image from Docker Hub</p>
 
     <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nv">$ </span>docker pull ntuos/mp1
 </code></pre></div>    </div>
   </li>
-  <li>
-    <p>Download the <code class="language-plaintext highlighter-rouge">xv6-riscv</code> folder from github repository named <code class="language-plaintext highlighter-rouge">mp1</code> and enter the folder that contains <code class="language-plaintext highlighter-rouge">xv6-riscv</code>, then run the following command to mount the <code class="language-plaintext highlighter-rouge">xv6-riscv</code> folder to docker container.</p>
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker run <span class="nt">-u</span> <span class="si">$(</span><span class="nb">id</span> <span class="nt">-u</span><span class="si">)</span>:<span class="si">$(</span><span class="nb">id</span> <span class="nt">-g</span><span class="si">)</span> <span class="nt">-it</span> <span class="nt">-v</span> <span class="si">$(</span><span class="nb">pwd</span><span class="si">)</span>/xv6-riscv:/home/ ntuos/mp1 bash
+  <li>Enter the repo and you will see a folder named <code class="language-plaintext highlighter-rouge">xv6-riscv</code>, then run the following command to mount the <code class="language-plaintext highlighter-rouge">xv6-riscv</code> folder to docker container.
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker run <span class="nt">-u</span> <span class="si">$(</span><span class="nb">id</span> <span class="nt">-u</span><span class="si">)</span>:<span class="si">$(</span><span class="nb">id</span> <span class="nt">-g</span><span class="si">)</span> <span class="nt">-it</span> <span class="nt">-v</span> <span class="si">$(</span><span class="nb">pwd</span><span class="si">)</span>/xv6-riscv:/home/ ntuos/mp1 bash  
 </code></pre></div>    </div>
+    <blockquote>
+      <p>After entering the container, you may find your user name in container be “I have no name!” or others.<br />
+Please ignore this issue, this doesn’t affect your programming task.<br />
+For windows users, please open docker desktop and <strong>run the command in WSL</strong></p>
+    </blockquote>
   </li>
 </ol>
 
@@ -270,18 +281,18 @@ exited
 <h2 id="5-grading">5. Grading</h2>
 
 <ul>
-  <li>
-    <p>Programming: 70%</p>
-
-    <p>There are 4 test cases: 1 public and 3 private</p>
-
-    <p>Public test case <code class="language-plaintext highlighter-rouge">mp1.c</code>: 10%
-  Private test cases: 20% each</p>
+  <li>Programming: 70% <br />
+  There are 4 test cases: 1 public and 3 private
+    <ol>
+      <li>Public test case <code class="language-plaintext highlighter-rouge">mp1.c</code>: 25%</li>
+      <li>Private test cases: 15% each</li>
+    </ol>
   </li>
-  <li>
-    <p>Report: 30%  (Temporary)
-  Please explain how you implement each function briefly in at most two pages
-  Each function accounts for 6%</p>
+  <li>Handwriting: 30%<br />
+  There are three questions in handwritting assignment.
+    <ul>
+      <li>For some questions, writing a simple code may help</li>
+    </ul>
   </li>
 </ul>
 
@@ -289,7 +300,7 @@ exited
 
 <h3 id="programming">Programming</h3>
 
-<p>Push your <code class="language-plaintext highlighter-rouge">xv6-riscv</code> source code to GitHub. Never push any other we do not request, such as <code class="language-plaintext highlighter-rouge">.o</code>, <code class="language-plaintext highlighter-rouge">.d</code>, <code class="language-plaintext highlighter-rouge">.asm</code> files. You can run <code class="language-plaintext highlighter-rouge">make clean</code> in container before you push. Make sure your <code class="language-plaintext highlighter-rouge">xv6-riscv</code> can be compiled and the thread package files, i.e., <code class="language-plaintext highlighter-rouge">threads.c</code> and <code class="language-plaintext highlighter-rouge">threads.h</code> are included.</p>
+<p>Push your <code class="language-plaintext highlighter-rouge">xv6-riscv</code> source code to GitHub. <del><strong>Never push any other files we do not request</strong>, such as <code class="language-plaintext highlighter-rouge">.o</code>, <code class="language-plaintext highlighter-rouge">.d</code>, <code class="language-plaintext highlighter-rouge">.asm</code> files.</del> You can run <code class="language-plaintext highlighter-rouge">make clean</code> in container before you push. Make sure your <code class="language-plaintext highlighter-rouge">xv6-riscv</code> can be compiled and the thread package files, i.e., <code class="language-plaintext highlighter-rouge">threads.c</code> and <code class="language-plaintext highlighter-rouge">threads.h</code> are included.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Repository
 └── xv6-riscv
@@ -302,21 +313,24 @@ exited
 </code></pre></div></div>
 
 <ul>
-  <li>You will get <strong>0</strong> if <code class="language-plaintext highlighter-rouge">xv6-riscv</code> cannot be compiled.</li>
-  <li>We might give discount on your grade if your format is wrong, such as pushing <code class="language-plaintext highlighter-rouge">.o</code> files.</li>
+  <li>You will get <strong>0</strong> if <del><code class="language-plaintext highlighter-rouge">xv6-riscv</code></del><strong>[Update 3/18] thread.c and thread.h</strong> cannot be compiled.</li>
+  <li><del>We might have discount on your grade if your format is wrong, such as pushing <code class="language-plaintext highlighter-rouge">.o</code> files.</del></li>
 </ul>
 
-<h3 id="report">Report</h3>
+<h4 id="update-318-you-can-create-new-files-in-your-repo-and-your-grade-wont-be-affected-just-make-sure-to-include-threadc-and-threadh">[Update 3/18] You can create new files in your repo, and your grade won’t be affected. Just make sure to include thread.c and thread.h</h4>
 
-<p>Use the entry code <code class="language-plaintext highlighter-rouge">86KX77</code> to sign up Gradescope: <a href="https://www.gradescope.com/courses/234104">Link</a></p>
+<h3 id="handwriting">Handwriting</h3>
 
-<p>If possible, use traditional Chinese characters for your name and use upper-cases for your student ID.</p>
+<ul>
+  <li>Use the entry code <code class="language-plaintext highlighter-rouge">86KX77</code> to sign up Gradescope: <a href="https://www.gradescope.com/courses/234104">Link</a></li>
+  <li>Use <strong>traditional Chinese characters</strong> for your name and use <strong>upper-cases</strong> for your student ID.</li>
+</ul>
 
 <h2 id="7-appendix">7. Appendix</h2>
 
 <p>Here are some references that might come in handy.</p>
 
-<h3 id="function-pointer">Function Pointer</h3>
+<h3 id="function-pointer-must-know">Function Pointer (Must know)</h3>
 
 <p><a href="https://en.wikipedia.org/wiki/Function_pointer">Function Pointer - Wiki</a>.</p>
 
@@ -329,25 +343,27 @@ exited
 <p><a href="https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html">Asm Documentation</a>.</p>
 
 <ul>
-  <li>Access stack pointer (placed into <code class="language-plaintext highlighter-rouge">stack_p</code>):</li>
-</ul>
+  <li>
+    <p>Access stack pointer (placed into <code class="language-plaintext highlighter-rouge">stack_p</code>):</p>
 
-<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">stack_p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">stack_p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 <span class="n">asm</span><span class="p">(</span><span class="s">"mov %%rsp, %0;"</span>
     <span class="o">:</span> <span class="s">"=r"</span> <span class="p">(</span><span class="n">stack_p</span><span class="p">));</span>
-</code></pre></div></div>
-<ul>
-  <li>Write stack pointer (value from <code class="language-plaintext highlighter-rouge">new_stack_p</code>):</li>
-</ul>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Write stack pointer (value from <code class="language-plaintext highlighter-rouge">new_stack_p</code>):</p>
 
-<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">new_stack_p</span><span class="p">;</span>
+    <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">new_stack_p</span><span class="p">;</span>
 <span class="n">asm</span><span class="p">(</span><span class="s">"mov %0, %%rsp;"</span>
          <span class="o">:</span>
          <span class="o">:</span> <span class="s">"r"</span> <span class="p">(</span><span class="n">new_stack_p</span><span class="p">));</span>
-</code></pre></div></div>
+</code></pre></div>    </div>
+  </li>
+</ul>
 
 <h2 id="8-debugging">8. Debugging</h2>
-<p>It is recommended to first use gdb (with enhancement such as <a href="https://gef.readthedocs.io/en/master/">gdb-gef</a>) to debug the program on x86 machine. The x86_64 version skeleton codes are available under <code class="language-plaintext highlighter-rouge">x86_64_release</code>.</p>
+<p>It is recommended to first use gdb (with enhancement such as <a href="https://gef.readthedocs.io/en/master/">gdb-gef</a>) to debug the program on x86 machine.</p>
 
 <h2 id="9-footnote">9. Footnote</h2>
 

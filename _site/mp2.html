@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+
+    
+    <meta charset="UTF-8">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Lab 2 Shared Memory | OS-21-Spring-at-NTU</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Lab 2 Shared Memory" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Github Course Site for Operating Systems 2021 at National Taiwan University" />
+<meta property="og:description" content="Github Course Site for Operating Systems 2021 at National Taiwan University" />
+<link rel="canonical" href="http://localhost:4000/mp2.html" />
+<meta property="og:url" content="http://localhost:4000/mp2.html" />
+<meta property="og:site_name" content="OS-21-Spring-at-NTU" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Lab 2 Shared Memory" />
+<script type="application/ld+json">
+{"@type":"WebPage","headline":"Lab 2 Shared Memory","url":"http://localhost:4000/mp2.html","description":"Github Course Site for Operating Systems 2021 at National Taiwan University","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="/assets/css/style.css?v=53ab31e9513b2ef72522d4a5c65d7c69118baaec">
+  </head>
+  <body>
+    <a id="skip-to-content" href="#content">Skip to the content.</a>
+
+    <header class="page-header" role="banner">
+      <h1 class="project-name">Operating System 2021 Machine Problem Site</h1>
+      <h2 class="project-tagline">The site provides the information for machine problems for Operating System Course offerred in Spring 2021 at National Taiwan University</h2>
+    </header>
+
+    <main id="content" class="main-content" role="main">
+      <h1 id="lab-2-shared-memory">Lab 2 Shared Memory</h1>
+
+<h2 id="description">Description</h2>
+
+<p>In computer software, <strong>shared memory</strong> is a way of exchanging data between process. One process will create an area in memory which other processes can access. Since processes can access the shared memory area like regular working memory, this is a very fast way of <a href="https://en.wikipedia.org/wiki/Inter-process_communication">inter-process communication</a> (<strong>IPC</strong>).</p>
+
+<p>Shared memory is also a method of conserving memory space by directing accesses to what would ordinarily be copies of a piece of data to a single instance instead, by using virtual memory mappings or with explicit support of the program in question.</p>
+
+<p><strong>Portable Operating System Interface</strong> (<strong>POSIX</strong>) provides a standardized <a href="https://pubs.opengroup.org/onlinepubs/007908799/xsh/shm_open.html">shm_open</a> application programming interface (API) for using shared memory. POSIX’s IPC (part of the <a href="https://pubs.opengroup.org/onlinepubs/009604599/basedefs/xbd_chap02.html">POSIX:XSI Extension</a>) also provides the shared memory facility in <a href="https://pubs.opengroup.org/onlinepubs/007908799/xsh/sysshm.h.html">sys/shm.h</a>.</p>
+
+<p>What’s more, and you might be more familiar with, POSIX provides the <a href="https://en.wikipedia.org/wiki/Mmap">mmap</a> API for mapping files into memory; a mapping can be shared, allowing the file’s contents to be used as shared memory.</p>
+
+<p>In MP2, you’ll add <code class="language-plaintext highlighter-rouge">mmap</code> and <code class="language-plaintext highlighter-rouge">munmap</code> to xv6, focusing on memory-mapped (mmap-ed) files.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">mmap</code> and <code class="language-plaintext highlighter-rouge">munmap</code> system calls allow UNIX programs to exert detailed control over their address spaces. They can be used to share memory among processes, to map files into process address spaces, and as part of user-level page fault schemes such as the garbage-collection algorithms.</p>
+
+<p>You only need to build them with limited utility required by shared memory. We assume you have possessed the  basic knowledge of <strong>file descriptor</strong> and <strong>inode</strong>, which are taught in System Programming.</p>
+
+<h3 id="before-coding">Before Coding</h3>
+
+<p>After accepting MP2 assignment on GitHub Classroom, clone the repository to your machine and change directory under it.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git clone <span class="o">[</span>mp2_repository_path]
+<span class="nv">$ </span><span class="nb">cd</span> <span class="o">[</span>mp2_repository]
+</code></pre></div></div>
+
+<p>Pull the image from Docker Hub and start a container.</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker pull ntuos/mp2
+<span class="nv">$ </span>docker run <span class="nt">-it</span> <span class="nt">-v</span> <span class="si">$(</span><span class="nb">pwd</span><span class="si">)</span>/xv6:/home/os_mp2/xv6 ntuos/mp2
+</code></pre></div></div>
+
+<h2 id="explanation">Explanation</h2>
+
+<ul>
+  <li><a href="/mp2#preliminary">Preliminary</a> (35%)
+    <ul>
+      <li><a href="/mp2#print-a-page-table-20">Print a Page Table</a> (10%+10%)</li>
+      <li><a href="/mp2#generate-a-page-fault-10">Generate a Page Fault</a> (10%)</li>
+      <li><a href="/mp2#add-system-call-stubs-5">Add System Call Stubs</a> (5%)</li>
+    </ul>
+  </li>
+  <li><a href="/mp2#implementation">Implementation</a> (50%)
+    <ul>
+      <li><a href="/mp2#bare-mmap-15">mmap</a> (15%+20%)</li>
+      <li><a href="/mp2#bare-munmap-10">munmap</a> (10%+5%)</li>
+    </ul>
+  </li>
+  <li><a href="/mp2#shared-virtual-memory-15">Shared Virtual Memory</a> (15%)</li>
+</ul>
+
+<h2 id="preliminary">Preliminary</h2>
+
+<h3 id="print-a-page-table-20">Print a Page Table (20%)</h3>
+
+<p><strong>(10%)</strong> Define a function called <code class="language-plaintext highlighter-rouge">vmprint()</code>. It should take a <code class="language-plaintext highlighter-rouge">pagetable_t</code> argument, and print that pagetable in format described below.</p>
+
+<h4 id="format">Format</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>page table 0x0000000087f6e000
+ ..0: pte 0x0000000021fda801 pa 0x0000000087f6a000
+ .. ..0: pte 0x0000000021fda401 pa 0x0000000087f69000
+ .. .. ..0: pte 0x0000000021fdac1f pa 0x0000000087f6b000
+ .. .. ..1: pte 0x0000000021fda00f pa 0x0000000087f68000
+ .. .. ..2: pte 0x0000000021fd9c1f pa 0x0000000087f67000
+ ..255: pte 0x0000000021fdb401 pa 0x0000000087f6d000
+ .. ..511: pte 0x0000000021fdb001 pa 0x0000000087f6c000
+ .. .. ..510: pte 0x0000000021fdd807 pa 0x0000000087f76000
+ .. .. ..511: pte 0x0000000020001c0b pa 0x0000000080007000
+</code></pre></div></div>
+
+<ul>
+  <li>The first line displays the argument to <code class="language-plaintext highlighter-rouge">vmprint</code>.</li>
+  <li>After that, there is a line for each PTE, including PTEs that refer to page-table pages deeper in the tree.</li>
+  <li>Each PTE line is indented by a number of <code class="language-plaintext highlighter-rouge">" .."</code> that indicates its depth in the tree.
+    <blockquote>
+      <p><strong>Note</strong>: It’s <code class="language-plaintext highlighter-rouge">" .."</code>, not <code class="language-plaintext highlighter-rouge">".. "</code>. Otherwise, you may not pass the judge.</p>
+    </blockquote>
+  </li>
+  <li>Each PTE line shows:
+    <ul>
+      <li>The PTE index in its page-table page</li>
+      <li>The PTE bits</li>
+      <li>The physical address extracted from the PTE</li>
+    </ul>
+  </li>
+  <li>Don’t print PTEs which are not valid.</li>
+</ul>
+
+<p>To print your first process’s page table, you can insert <code class="language-plaintext highlighter-rouge">if(p-&gt;pid==1) vmprint(p-&gt;pagetable)</code> in <code class="language-plaintext highlighter-rouge">kernel/exec.c</code> just before the <code class="language-plaintext highlighter-rouge">return argc</code>. Then, if you start xv6, it should print output like the above example, describing the page table of the first process at the point when it has just finished <code class="language-plaintext highlighter-rouge">exec()</code>ing <code class="language-plaintext highlighter-rouge">init</code>.</p>
+
+<p>Your code might emit different physical addresses than those shown above. But the number of entries and the virtual addresses should be the same.</p>
+
+<p>In the above example, the top-level page-table page has mappings for entries 0 and 255. The next level down for entry 0 has only index 0 mapped, and the bottom-level for that index 0 has entries 0, 1, and 2 mapped.</p>
+
+<h4 id="hint">Hint</h4>
+<ul>
+  <li>Read <strong>Chapter 3</strong> of the <a href="https://pdos.csail.mit.edu/6.828/2020/xv6/book-riscv-rev1.pdf">xv6 book</a>, and related files:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">kernel/memlayout.h</code>, which captures the layout of memory.</li>
+      <li><code class="language-plaintext highlighter-rouge">kernel/vm.c</code>, which contains most virtual memory code.</li>
+    </ul>
+  </li>
+  <li>You can put <code class="language-plaintext highlighter-rouge">vmprint()</code> in <code class="language-plaintext highlighter-rouge">kernel/vm.c</code>.</li>
+  <li>Use the macros at the end of the file <code class="language-plaintext highlighter-rouge">kernel/riscv.h</code>.</li>
+  <li>The function <code class="language-plaintext highlighter-rouge">freewalk</code> in <code class="language-plaintext highlighter-rouge">kernel/vm.c</code> may be inspirational.</li>
+  <li>Define the prototype for <code class="language-plaintext highlighter-rouge">vmprint</code> in <code class="language-plaintext highlighter-rouge">kernel/defs.h</code> so that you can call it from <code class="language-plaintext highlighter-rouge">kernel/exec.c</code>.</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">%p</code> in your <code class="language-plaintext highlighter-rouge">printf</code> calls to print out full 64-bit hex PTEs and addresses as shown in the example.</li>
+</ul>
+
+<p><strong>(10%)</strong> The figure below shows a process’s user address space, with its initial stack. <strong>In report, explain the output of <code class="language-plaintext highlighter-rouge">vmprint</code> in terms of the figure below and answer questions:</strong></p>
+<ul>
+  <li>What does page 0 contain?</li>
+  <li>What is in page 2?</li>
+  <li>When running in user mode, could the process read/write the memory mapped by page 1? Why?</li>
+</ul>
+
+<p><img src="https://i.imgur.com/Aw6Rwb6.png" width="550" /></p>
+
+<p><strong>Note</strong>: Remember to comment out or remove the additional code you just added in <code class="language-plaintext highlighter-rouge">kernel/exec.c</code>, but keep <code class="language-plaintext highlighter-rouge">vmprint</code>. Because we will grade your <code class="language-plaintext highlighter-rouge">vmprint</code> and it also helps you debugging in later sections.</p>
+
+<h3 id="generate-a-page-fault-10">Generate a Page Fault (10%)</h3>
+
+<p><strong>Lazy allocation</strong> of user-space heap memory is one of the many neat tricks an OS can play with page table hardware.</p>
+
+<p>xv6 applications ask the kernel for heap memory using the <code class="language-plaintext highlighter-rouge">sbrk()</code> system call, which is implemented at the function <code class="language-plaintext highlighter-rouge">sys_sbrk()</code> in <code class="language-plaintext highlighter-rouge">kernel/sysproc.c</code>. In xv6 kernel, <code class="language-plaintext highlighter-rouge">sbrk()</code> allocates physical memory and maps it into the process’s virtual address space. It can take a long time for a kernel to allocate and map memory for a large request. For example, consider that a gigabyte consists of 262,144 4096-byte pages; that’s a huge number of allocations.</p>
+
+<p>In addition, some programs allocate more memory than they actually use (e.g., to implement sparse arrays), or allocate memory well in advance of use.</p>
+
+<p>To allow <code class="language-plaintext highlighter-rouge">sbrk()</code> to complete more quickly in these cases, sophisticated kernels allocate user memory lazily. That is, <code class="language-plaintext highlighter-rouge">sbrk()</code> doesn’t allocate physical memory, but just <strong>remembers which user addresses are allocated and marks those addresses as invalid in the user page table</strong>.</p>
+
+<p>When the process first tries to use any given page of lazily-allocated memory, the CPU generates a page fault, which the kernel <strong>handles by allocating physical memory, zeroing it, and mapping it</strong>.</p>
+
+<p>You will need to add lazy allocation feature to <code class="language-plaintext highlighter-rouge">mmap</code> in later sections. For this section, you simply need to eliminate allocation from <code class="language-plaintext highlighter-rouge">sbrk()</code> and to understand what happens to xv6.</p>
+
+<hr />
+
+<p>Delete page allocation from the <code class="language-plaintext highlighter-rouge">sbrk(n)</code> system call implementation (<code class="language-plaintext highlighter-rouge">sys_sbrk()</code> in <code class="language-plaintext highlighter-rouge">kernel/sysproc.c</code>). The <code class="language-plaintext highlighter-rouge">sbrk(n)</code> system call grows the process’s memory size by <code class="language-plaintext highlighter-rouge">n</code> bytes, and then returns the start of the newly allocated region (i.e., the old size). Your new <code class="language-plaintext highlighter-rouge">sbrk(n)</code> should just increment the process’s size (<code class="language-plaintext highlighter-rouge">myproc()-&gt;sz</code>) by <code class="language-plaintext highlighter-rouge">n</code> and return the old size. It should not allocate memory.</p>
+
+<p>Try to guess what the result of this modification will be: What will break?</p>
+
+<p>After making modifications, boot xv6 and type <code class="language-plaintext highlighter-rouge">echo hi</code> to the shell. You should see something like this:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>init: starting sh
+<span class="nv">$ </span><span class="nb">echo </span>hi
+usertrap<span class="o">()</span>: unexpected scause 0x000000000000000f <span class="nv">pid</span><span class="o">=</span>3
+            <span class="nv">sepc</span><span class="o">=</span>0x00000000000012b4 <span class="nv">stval</span><span class="o">=</span>0x0000000000004008
+panic: uvmunmap: not mapped
+</code></pre></div></div>
+
+<p>The “usertrap(): …” message is from the user trap handler in <code class="language-plaintext highlighter-rouge">kernel/trap.c</code>. It has caught an exception that it does not know how to handle. The “stval=0x0..04008” indicates that the virtual address that caused the page fault is 0x4008. <strong>In report, explain why this page fault occurs.</strong></p>
+
+<h4 id="hint-1">Hint</h4>
+<ul>
+  <li>Read <strong>Section 4.6</strong> of the <a href="https://pdos.csail.mit.edu/6.828/2020/xv6/book-riscv-rev1.pdf">xv6 book</a> and related file <code class="language-plaintext highlighter-rouge">kernel/trap.c</code>.</li>
+  <li>You should delete the call to <code class="language-plaintext highlighter-rouge">growproc()</code>.</li>
+  <li>You still need to increase process’s size.</li>
+</ul>
+
+<p><strong>Note</strong>: Make sure you fully understand <a href="/mp2#print-a-page-table-20">Print a Page Table</a> and <a href="/mp2#generate-a-page-fault-10">Generate a Page Fault</a> sections, and remember to undo your revision in <code class="language-plaintext highlighter-rouge">sbrk(n)</code> before moving on next section.</p>
+
+<h3 id="add-system-call-stubs-5">Add System Call Stubs (5%)</h3>
+
+<p>Now we start explain engineering details on <code class="language-plaintext highlighter-rouge">mmap</code> and <code class="language-plaintext highlighter-rouge">munmap</code>. We provide <code class="language-plaintext highlighter-rouge">user/mp2test.c</code> to help you undertake the mission step by step. Each test in <code class="language-plaintext highlighter-rouge">mp2test</code> will be based on the assumption that you have already passed previous tests. Our judge will do the same way, so do not skip sections. <a href="./mp2#sample-execution">See sample execution</a></p>
+
+<h4 id="1-mmap">1. <code class="language-plaintext highlighter-rouge">mmap</code></h4>
+
+<p>If you run <code class="language-plaintext highlighter-rouge">man 2 mmap</code> in Linux platform, the manual page shows this declaration for <code class="language-plaintext highlighter-rouge">mmap</code>:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="o">*</span><span class="nf">mmap</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">addr</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">length</span><span class="p">,</span> <span class="kt">int</span> <span class="n">prot</span><span class="p">,</span> <span class="kt">int</span> <span class="n">flags</span><span class="p">,</span>
+           <span class="kt">int</span> <span class="n">fd</span><span class="p">,</span> <span class="kt">off_t</span> <span class="n">offset</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>You can also try it in our container (outside xv6).</p>
+
+<p><code class="language-plaintext highlighter-rouge">mmap</code> can be called in many ways, but MP2 only requires a subset of its features relevant to <strong>memory-mapping a file</strong>.</p>
+
+<h4 id="2-munmap">2. <code class="language-plaintext highlighter-rouge">munmap</code></h4>
+
+<p>You may notice that the manual page for <code class="language-plaintext highlighter-rouge">mmap</code> (run <code class="language-plaintext highlighter-rouge">man 2 mmap</code>) also shows this declaration for <code class="language-plaintext highlighter-rouge">munmap</code>:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">munmap</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">addr</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">length</span><span class="p">);</span>
+</code></pre></div></div>
+
+<hr />
+
+<p>Add <code class="language-plaintext highlighter-rouge">$U/_mp2test</code> to <code class="language-plaintext highlighter-rouge">UPROGS</code> in Makefile. Run <code class="language-plaintext highlighter-rouge">make qemu</code> and you will see that the compiler cannot compile <code class="language-plaintext highlighter-rouge">user/mp2test.c</code>, because the user-space stubs for the system call <code class="language-plaintext highlighter-rouge">mmap</code> and <code class="language-plaintext highlighter-rouge">munmap</code> don’t exist yet.</p>
+
+<p>To add system calls, you need to give xv6:</p>
+<ul>
+  <li>User-space stubs for the system calls
+    <ul>
+      <li>Add prototypes for the system calls to <code class="language-plaintext highlighter-rouge">user/user.h</code></li>
+      <li>Add stubs to <code class="language-plaintext highlighter-rouge">user/usys.pl</code></li>
+      <li>Add syscall numbers to <code class="language-plaintext highlighter-rouge">kernel/syscall.h</code></li>
+    </ul>
+
+    <p><code class="language-plaintext highlighter-rouge">Makefile</code> invokes the Perl script <code class="language-plaintext highlighter-rouge">user/usys.pl</code>, which produces <code class="language-plaintext highlighter-rouge">user/usys.S</code>. The actual system call stubs, which use the RISC-V <code class="language-plaintext highlighter-rouge">ecall</code> instruction to transition to the kernel.</p>
+  </li>
+  <li>Kernel-space implemetation of the system calls
+    <ul>
+      <li>Add <code class="language-plaintext highlighter-rouge">sys_mmap()</code> and <code class="language-plaintext highlighter-rouge">sys_munmap()</code> functions in <code class="language-plaintext highlighter-rouge">kernel/sysproc.c</code>.</li>
+    </ul>
+
+    <p>For now, just return errors from <code class="language-plaintext highlighter-rouge">sys_mmap()</code> and <code class="language-plaintext highlighter-rouge">sys_munmap()</code>. Leave the implementation in later sections.</p>
+  </li>
+</ul>
+
+<h4 id="hint-2">Hint</h4>
+<ul>
+  <li>Read <strong>Chapter 2</strong>, <strong>Section 4.3</strong> and <strong>Section 4.4</strong> of the <a href="https://pdos.csail.mit.edu/6.828/2020/xv6/book-riscv-rev1.pdf">xv6 book</a>.</li>
+  <li>Each of these functions should use its argument in a variable in the <code class="language-plaintext highlighter-rouge">proc</code> structure (see <code class="language-plaintext highlighter-rouge">kernel/proc.h</code>).</li>
+  <li>The functions to retrieve system call arguments from user space are in <code class="language-plaintext highlighter-rouge">kernel/syscall.c</code>.</li>
+  <li>You can see examples of their use in <code class="language-plaintext highlighter-rouge">kernel/sysproc.c</code>.</li>
+  <li>You may be stopped by some data type issues in xv6. Try to solve it.</li>
+  <li>If you want to know what each field repesents, see <a href="./mp2#specs">SPECs</a> below.</li>
+</ul>
+
+<p>Run <code class="language-plaintext highlighter-rouge">mp2test</code>, which will fail at the first <code class="language-plaintext highlighter-rouge">mmap</code> call but give you some informational messages. We defined <code class="language-plaintext highlighter-rouge">PROT_READ</code> etc for you in <code class="language-plaintext highlighter-rouge">kernel/fcntl.h</code>.</p>
+
+<h2 id="implementation">Implementation</h2>
+
+<p>If you try doing the implementation, <strong>you need to briefly explain how you manage VMA in process’s user address space in report</strong>, depending on how far you go.</p>
+<ul>
+  <li>Following sections are expected to be <strong>DIFFICULT</strong>. You are encouraged to discuss with other classmates, but do not share code or report. <strong>Write the code on your own</strong> and <strong>write the report in your own words</strong>.</li>
+  <li><strong>If your explanation does not correspond to your code, you are also suspected of committing plagiarism.</strong> TAs will decide whether you can get partial score for corresponding section, or fail this course.</li>
+  <li>List your assumptions, if any. Of course, any assumption should not violate the <a href="./mp2#specs">SPECs</a>.</li>
+  <li><strong>If your code was based on some critical assumptions and you lack them in report, TAs will decide whether you get partial score or get 0 for corresponding section.</strong> In some severe cases, you might be suspected of committing plagiarism.</li>
+</ul>
+
+<h3 id="specs">SPECs</h3>
+
+<h3 id="1-mmap-1">1. <code class="language-plaintext highlighter-rouge">mmap</code></h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="o">*</span><span class="nf">mmap</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">addr</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">length</span><span class="p">,</span> <span class="kt">int</span> <span class="n">prot</span><span class="p">,</span> <span class="kt">int</span> <span class="n">flags</span><span class="p">,</span>
+           <span class="kt">int</span> <span class="n">fd</span><span class="p">,</span> <span class="kt">off_t</span> <span class="n">offset</span><span class="p">);</span>
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">addr</code> will always be zero in MP2.</li>
+  <li><code class="language-plaintext highlighter-rouge">length</code> is the number of bytes to map; it might not be the same as the file’s length.</li>
+  <li><code class="language-plaintext highlighter-rouge">prot</code> indicates whether the memory should be mapped <em>readable</em>, <em>writeable</em>, and/or <em>executable</em>; you can assume that <code class="language-plaintext highlighter-rouge">prot</code> is <code class="language-plaintext highlighter-rouge">PROT_READ</code> or <code class="language-plaintext highlighter-rouge">PROT_WRITE</code> or both.</li>
+  <li><code class="language-plaintext highlighter-rouge">flags</code> will be one of the following bits:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">MAP_SHARED</code>: modifications to the mapped memory should be written back to the file.</li>
+      <li><code class="language-plaintext highlighter-rouge">MAP_PRIVATE</code>: modifications should not be written back.<br />
+You don’t have to implement any other bits in <code class="language-plaintext highlighter-rouge">flags</code>.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">fd</code> is the open file descriptor of the file to map.</li>
+  <li><code class="language-plaintext highlighter-rouge">offset</code> will always be zero in MP2; that is, we always map the file from the starting point of the mmap-ed file.</li>
+</ul>
+
+<p>What we expect from your <code class="language-plaintext highlighter-rouge">mmap</code> call:
+The kernel should decide the <strong>virtual address</strong> where to map the file. <code class="language-plaintext highlighter-rouge">mmap</code> returns that address, or <code class="language-plaintext highlighter-rouge">0xffffffffffffffff</code> if it fails.</p>
+
+<h3 id="2-munmap-1">2. <code class="language-plaintext highlighter-rouge">munmap</code></h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">munmap</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">addr</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">length</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">munmap</code> should remove <code class="language-plaintext highlighter-rouge">mmap</code> mappings in address range indicated by <code class="language-plaintext highlighter-rouge">addr</code> and <code class="language-plaintext highlighter-rouge">length</code>. If the process has modified the memory and has it mapped <code class="language-plaintext highlighter-rouge">MAP_SHARED</code>, the modifications should first be written to the file.</p>
+
+<h3 id="bare-mmap-15">Bare <code class="language-plaintext highlighter-rouge">mmap</code> (15%)</h3>
+
+<p>To keep track of what <code class="language-plaintext highlighter-rouge">mmap</code> has mapped for each process, <strong>define a VMA (virtual memory area) structure for xv6 yourself</strong>, recording the address, length, permissions, file, etc. for a virtual memory range created by <code class="language-plaintext highlighter-rouge">mmap</code>. You can refer to <a href="https://sites.google.com/site/knsathyawiki/example-page/chapter-15-the-process-address-space#TOC-Virtual-Memory-Areas">Linux’s VMA</a>.</p>
+
+<p>Since xv6 kernel doesn’t have a memory allocator in the kernel, it’s OK to declare a fixed-size array of VMAs and allocate from that array as needed. A size of <strong>16</strong> should be sufficient.</p>
+
+<p>Find an unused region in the process’s address space in which to map the file, and add a VMA to the process’s table of mapped regions. The VMA should contain a pointer to a <code class="language-plaintext highlighter-rouge">struct file</code> for the file being mapped. <code class="language-plaintext highlighter-rouge">mmap</code> should increase the file’s reference count so that the structure doesn’t disappear when the file is closed.</p>
+
+<h4 id="hint-3">Hint</h4>
+<ul>
+  <li>Read <strong>Section 8.13</strong> of the <a href="https://pdos.csail.mit.edu/6.828/2020/xv6/book-riscv-rev1.pdf">xv6 book</a>.</li>
+  <li>Recall what you have written in report for <a href="/mp2#print-a-page-table-20">Print a Page Table</a> section.</li>
+  <li>Write your implementation code in <code class="language-plaintext highlighter-rouge">sys_mmap()</code>, the function you just added in <a href="/mp2#add-system-call-stubs-5">Add System Call Stubs</a> section. But you can define your VMA wherever is convenient for you.</li>
+  <li>Take a look at the <a href="/mp2#specs">SPECs</a>. Think about how to manage the arguments and return value of the system call <code class="language-plaintext highlighter-rouge">mmap</code> via VMA.</li>
+</ul>
+
+<p>If all goes well, by running <code class="language-plaintext highlighter-rouge">mp2test</code>, the first test <code class="language-plaintext highlighter-rouge">mmap bare</code> should succeed, but the mmap-ed memory will cause at least one, perhaps two, page fault (and thus lazy allocation) and kill <code class="language-plaintext highlighter-rouge">mp2test</code>. <a href="./mp2#sample-execution">See sample execution</a></p>
+
+<h3 id="mmap-with-lazy-allocation-20"><code class="language-plaintext highlighter-rouge">mmap</code> with Lazy Allocation (20%)</h3>
+
+<p>Fill in page table lazily, in response to page faults. That is, <code class="language-plaintext highlighter-rouge">mmap</code> should not allocate physical memory or read the file. Instead, do that in page fault handling code in (or called by) <code class="language-plaintext highlighter-rouge">usertrap</code> in <code class="language-plaintext highlighter-rouge">kernel/trap.c</code>. As mentioned in <a href="/mp2#generate-a-page-fault-10">Generate a Page Fault</a> section, the reason to be lazy is to ensure that <code class="language-plaintext highlighter-rouge">mmap</code> of a large file is fast, and that <code class="language-plaintext highlighter-rouge">mmap</code> of a file larger than physical memory is possible.</p>
+
+<p>Modify the code in <code class="language-plaintext highlighter-rouge">kernel/trap.c</code> to respond to a page fault from user space by mapping a newly-allocated page of physical memory at the faulting address, and then returning back to user space to let the process continue executing.</p>
+
+<p>To handle page-fault in a mmap-ed region:</p>
+<ul>
+  <li>Add code to allocate a page of physical memory.</li>
+  <li>Read 4096 bytes of the relevant file into that page.</li>
+  <li>Map it into the user address space.</li>
+  <li>Set the permissions correctly on the page.</li>
+</ul>
+
+<h4 id="hint-4">Hint</h4>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">kernel/trap.c</code> catches an exception, particularly to respond a page fault in MP2.</li>
+  <li>Read the explanation in <a href="/mp2#generate-a-page-fault-10">Generate a Page Fault</a> section again, to see how <strong>lazy allocation</strong> mechanism works in xv6.</li>
+  <li>Recall what you have written in report for <a href="/mp2#print-a-page-table-20">Print a Page Table</a> and <a href="/mp2#generate-a-page-fault-10">Generate a Page Fault</a> sections.</li>
+  <li>You can check whether a fault is a page fault by seeing if <code class="language-plaintext highlighter-rouge">r_scause()</code> is <strong>13</strong> or <strong>15</strong> in <code class="language-plaintext highlighter-rouge">usertrap()</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">r_stval()</code> returns the RISC-V <code class="language-plaintext highlighter-rouge">stval</code> register, which contains the virtual address that caused the page fault.</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">PGROUNDDOWN()</code> to round the faulting virtual address down to a page boundary.</li>
+  <li>Kill the process if it page-faults on a virtual memory address higher than any allocated with <code class="language-plaintext highlighter-rouge">sbrk()</code>.</li>
+  <li>Read the file <code class="language-plaintext highlighter-rouge">kernel/kalloc.c</code>, which contains code for allocating and freeing physical memory.</li>
+  <li>Steal code from <code class="language-plaintext highlighter-rouge">uvmalloc()</code> in <code class="language-plaintext highlighter-rouge">kernel/vm.c</code>, which is what <code class="language-plaintext highlighter-rouge">sbrk()</code> calls (via <code class="language-plaintext highlighter-rouge">growproc()</code>). You’ll need to call <code class="language-plaintext highlighter-rouge">kalloc()</code> and <code class="language-plaintext highlighter-rouge">mappages()</code>.</li>
+  <li>Handle out-of-memory correctly: If <code class="language-plaintext highlighter-rouge">kalloc()</code> fails in the page fault handler, kill the current process.</li>
+  <li>Read the file with <code class="language-plaintext highlighter-rouge">readi</code>:
+    <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">readi</span><span class="p">(</span><span class="k">struct</span> <span class="n">inode</span> <span class="o">*</span><span class="n">ip</span><span class="p">,</span> <span class="kt">int</span> <span class="n">user_dst</span><span class="p">,</span> <span class="n">uint64</span> <span class="n">dst</span><span class="p">,</span> <span class="n">uint</span> <span class="n">off</span><span class="p">,</span> <span class="n">uint</span> <span class="n">n</span><span class="p">);</span>
+</code></pre></div>    </div>
+    <p>It takes an offset argument at which to read in the file. If <code class="language-plaintext highlighter-rouge">user_dst==1</code>, then <code class="language-plaintext highlighter-rouge">dst</code> is a user virtual address; otherwise, <code class="language-plaintext highlighter-rouge">dst</code> is a kernel address.</p>
+  </li>
+  <li>You will have to lock/unlock the inode passed to <code class="language-plaintext highlighter-rouge">readi</code>. That is, caller must hold <code class="language-plaintext highlighter-rouge">ip-&gt;lock</code>.</li>
+  <li>Use your <code class="language-plaintext highlighter-rouge">vmprint</code> function to print the content of a page table for debugging.</li>
+  <li>If the kernel crashes, look up <code class="language-plaintext highlighter-rouge">sepc</code> in <code class="language-plaintext highlighter-rouge">kernel/kernel.asm</code>.</li>
+  <li>If you see the error “incomplete type proc”, include <code class="language-plaintext highlighter-rouge">spinlock.h</code> then <code class="language-plaintext highlighter-rouge">proc.h</code>.</li>
+  <li>If <code class="language-plaintext highlighter-rouge">uvmunmap()</code> panics, modify it to not panic when some pages aren’t mapped.</li>
+</ul>
+
+<p>Run <code class="language-plaintext highlighter-rouge">mp2test</code>. It should pass the test <code class="language-plaintext highlighter-rouge">mmap lazy</code> and stop at the first <code class="language-plaintext highlighter-rouge">munmap</code> test. <a href="./mp2#sample-execution">See sample execution</a></p>
+
+<blockquote>
+  <p><strong>Note</strong>: You can comment out some code in <code class="language-plaintext highlighter-rouge">mp2test.c</code>, such as <code class="language-plaintext highlighter-rouge">munmap</code> system call, to adjust the test.</p>
+</blockquote>
+
+<h3 id="bare-munmap-10">Bare <code class="language-plaintext highlighter-rouge">munmap</code> (10%)</h3>
+
+<p>Find the VMA for the address range and unmap the specified pages. If <code class="language-plaintext highlighter-rouge">munmap</code> removes all pages of a previous <code class="language-plaintext highlighter-rouge">mmap</code>, it should decrement the reference count of the corresponding <code class="language-plaintext highlighter-rouge">struct file</code>. If an unmapped page has been modified and the file is mapped <code class="language-plaintext highlighter-rouge">MAP_SHARED</code>, write the page back to the file.</p>
+
+<p>Ideally your implementation would only write back <code class="language-plaintext highlighter-rouge">MAP_SHARED</code> pages that the program actually modified. The dirty bit (D) in the RISC-V PTE indicates whether a page has been written. However, <code class="language-plaintext highlighter-rouge">mp2test</code> does not check that non-dirty pages are not written back; thus you can get away with writing pages back without looking at D bits.</p>
+
+<h4 id="hint-5">Hint</h4>
+
+<ul>
+  <li>Similar to what you’ve done in <a href="/mp2#bare-mmap-15">Bare mmap</a> section, write your implementation code in <code class="language-plaintext highlighter-rouge">sys_munmap()</code>.</li>
+  <li>You may want to use <code class="language-plaintext highlighter-rouge">uvmunmap</code>.</li>
+  <li>Look at <code class="language-plaintext highlighter-rouge">filewrite</code> in <code class="language-plaintext highlighter-rouge">kernel/file.c</code> for inspiration.</li>
+</ul>
+
+<p>Run <code class="language-plaintext highlighter-rouge">mp2test</code>. The test <code class="language-plaintext highlighter-rouge">munmap bare</code> should pass. <a href="./mp2#sample-execution">See sample execution</a></p>
+
+<blockquote>
+  <p><strong>Note</strong>: Remember to undo the changes to <code class="language-plaintext highlighter-rouge">mp2test.c</code> you’ve made in last section, if any.</p>
+</blockquote>
+
+<h3 id="reclaim-mmap-ed-files-5">Reclaim mmap-ed Files (5%)</h3>
+
+<p>OSes appear to be lazy, but the programmers seem right behind.</p>
+
+<p>Conceptually, when the process is about to exit, it is <strong>programmers’ responsibility</strong> to free allocated memory, to close non-standard file descriptors, etc. The classic POSIX programming guide <a href="https://www.oreilly.com/library/view/advanced-programming-in/9780321638014/">Advanced Programming in the UNIX® Environment</a> states:</p>
+
+<blockquote>
+  <p><strong>When a process terminates, all of its open files are closed automatically by the kernel. Many programs (programmers) take advantage of this fact and don’t explicitly close open files.</strong></p>
+</blockquote>
+
+<p>Although that’s not something a programmer should expect, every sane OS will clean up after process ends.</p>
+
+<p>Therefore, your final mission of implementing the system calls <code class="language-plaintext highlighter-rouge">mmap</code> and <code class="language-plaintext highlighter-rouge">munmap</code> is to modify <code class="language-plaintext highlighter-rouge">exit</code> to unmap the process’s mapped regions as if <code class="language-plaintext highlighter-rouge">munmap</code> had been called.</p>
+
+<p>Run <code class="language-plaintext highlighter-rouge">mp2test</code>. The test <code class="language-plaintext highlighter-rouge">munmap exit</code> should pass. <a href="./mp2#sample-execution">See sample execution</a></p>
+
+<h3 id="shared-virtual-memory-15">Shared Virtual Memory (15%)</h3>
+
+<p>Modify <code class="language-plaintext highlighter-rouge">fork</code> to ensure that the child has the same mapped regions as the parent.</p>
+
+<p>In page fault handler of the child, <strong>allocate a new physical page</strong> for itself.</p>
+
+<h4 id="hint-6">Hint</h4>
+<ul>
+  <li>Increment the reference count for a VMA’s <code class="language-plaintext highlighter-rouge">struct file</code>.</li>
+</ul>
+
+<p>Sharing a physical page with the parent would be cooler, but it would require more implementation work. You can try it in <a href="/mp2#bonus">Bonus</a> part.</p>
+
+<p>Run <code class="language-plaintext highlighter-rouge">mp2test</code>. It should pass all tests.</p>
+
+<h2 id="sample-execution">Sample Execution</h2>
+
+<p>When you’re done, you should see this output:</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mp2test
+mp2_test starting
+<span class="nb">test </span>mmap bare
+<span class="nb">test </span>mmap bare: OK
+<span class="nb">test </span>mmap lazy
+<span class="nb">test </span>mmap lazy: OK
+<span class="nb">test </span>munmap bare
+<span class="nb">test </span>munmap bare: OK
+<span class="nb">test </span>munmap <span class="nb">exit
+test </span>munmap <span class="nb">exit</span>: OK
+<span class="nb">test </span>shared virtual memory
+<span class="nb">test </span>shared virtual memory: OK
+mp2test: all tests succeeded
+</code></pre></div></div>
+
+<h2 id="bonus">Bonus</h2>
+
+<ul>
+  <li><strong>Do not try it unless you think your life is too easy.</strong></li>
+  <li><strong>TA won’t answer any question about bonus part.</strong></li>
+</ul>
+
+<h3 id="shared-physical-memory-20">Shared Physical Memory (20%)</h3>
+
+<p>If two processes get the same file mmap-ed, share their physical pages.</p>
+
+<p>In <a href="/mp2#shared-virtual-memory-15">Shared Virtual Memory</a> part, our solution allocates a new physical page for each page read from the mmap-ed file, even though <strong>the data is also in kernel memory in the buffer cache</strong>.</p>
+
+<p>Modify your implementation to use that physical memory.</p>
+
+<h4 id="hint-7">Hint</h4>
+<ul>
+  <li>This requires that file blocks be the same size as pages (set <code class="language-plaintext highlighter-rouge">BSIZE</code> to 4096).</li>
+  <li>You need to pin mmap-ed blocks into the buffer cache.</li>
+  <li>You need to worry about reference counts on physical pages.</li>
+</ul>
+
+<p>In report, <strong>explain how you manage kernel page table</strong> and <strong>describe the difference</strong> between the implementation of <a href="/mp2#shared-virtual-memory-15">Shared Virtual Memory</a> and the one of <a href="/mp2#shared-physical-memory-20">Shared Physical Memory</a>.</p>
+
+<h2 id="submission">Submission</h2>
+
+<p>The score in summary is:</p>
+<ul>
+  <li><a href="/mp2#preliminary">Preliminary</a> (35%)
+    <ul>
+      <li><a href="/mp2#print-a-page-table-20">Print a Page Table</a> (10%+10%*)</li>
+      <li><a href="/mp2#generate-a-page-fault-10">Generate a Page Fault</a> (10%*)</li>
+      <li><a href="/mp2#add-system-call-stubs-5">Add System Call Stubs</a> (5%)</li>
+    </ul>
+  </li>
+  <li><a href="/mp2#implementation">Implementation</a> (50%*)
+    <ul>
+      <li><a href="/mp2#bare-mmap-15">mmap</a> (15%+20%)</li>
+      <li><a href="/mp2#bare-munmap-10">munmap</a> (10%+5%)</li>
+    </ul>
+  </li>
+  <li><a href="/mp2#shared-virtual-memory-15">Shared Virtual Memory</a> (15%)</li>
+</ul>
+
+<p>*Need to write report.</p>
+
+<h3 id="early-bird-5">Early Bird (5%)</h3>
+
+<p>Finish <strong>Preliminary</strong> part before <strong>April 6th 23:59</strong> (i.e., by the end of spring break).</p>
+
+<h3 id="report">Report</h3>
+
+<p>Submit your reports via Gradescope:</p>
+
+<ul>
+  <li>MP2-Preliminary (Early Bird) <strong>or</strong> MP2-Preliminary</li>
+  <li>MP2-Implementation</li>
+  <li>MP2-Bonus</li>
+</ul>
+
+<p>In order not to make confusion, MP2-Preliminary (Early Bird) will open until April 6th. Other three will open from April 7th.</p>
+
+<ul>
+  <li>If you submit <strong>MP2-Preliminary (Early Bird)</strong>, when judging source code, <strong>your code in Preliminary part</strong> (i.e. <a href="/mp2#print-a-page-table-20">Print a Page Table</a> and <a href="/mp2#add-system-call-stubs-5">Add System Call Stubs</a>) <strong>before the deadline of Early Bird will be judged and graded</strong>. (TA will checkout your repository to latest commit before the deadline).</li>
+  <li>If you want to keep working on repository and don’t want to affect grading, you can open a new branch and merge it back afterward. Leave your solution in <code class="language-plaintext highlighter-rouge">master</code> branch.</li>
+  <li>Only if you submit <strong>MP2-Bonus</strong> will TA grade on <a href="/mp2#shared-physical-memory-20">Shared Physical Memory</a> section.</li>
+</ul>
+
+<h3 id="source-code">Source Code</h3>
+
+<p>Push your xv6 source code to GitHub. Your final repository should look like following hierarchy:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Repository
+└── xv6
+    ├── user
+    ├── kernel
+    └── ...
+</code></pre></div></div>
+
+<ul>
+  <li>Make sure your xv6 can be compiled.</li>
+  <li>Run <code class="language-plaintext highlighter-rouge">make clean</code> before you push.</li>
+  <li>You can push any other files we do not request, but at your own risk. You will get 0 if xv6 cannot be compiled.</li>
+</ul>
+
+<h2 id="reference">Reference</h2>
+<ul>
+  <li>POSIX — IEEE Standard Portable Operating System Interface for Computer Environments<br />
+<a href="https://ieeexplore.ieee.org/document/8684566">https://ieeexplore.ieee.org/document/8684566</a></li>
+  <li>mmap(2) — Linux manual page<br />
+<a href="https://man7.org/linux/man-pages/man2/mmap.2.html">https://man7.org/linux/man-pages/man2/mmap.2.html</a></li>
+  <li>xv6 — A simple, Unix-like teaching operating system by MIT<br />
+<a href="https://pdos.csail.mit.edu/6.828/2020/xv6/book-riscv-rev1.pdf">https://pdos.csail.mit.edu/6.828/2020/xv6/book-riscv-rev1.pdf</a></li>
+  <li>Linux Kernel - The Process Address Space — sathya’s Blog<br />
+<a href="https://sites.google.com/site/knsathyawiki/example-page/chapter-15-the-process-address-space">https://sites.google.com/site/knsathyawiki/example-page/chapter-15-the-process-address-space</a></li>
+  <li>Advanced Programming in the UNIX® Environment<br />
+<a href="https://www.oreilly.com/library/view/advanced-programming-in/9780321638014/">https://www.oreilly.com/library/view/advanced-programming-in/9780321638014/</a></li>
+</ul>
+
+
+
+      <footer class="site-footer">
+        
+          <p class="copyright">Operating System 2021 Machine Problem Site maintained by <a href="https://github.com/OperatingSystemsAtNTU">OperatingSystemsAtNTU</a></p>
+        
+      </footer>
+    </main>
+  </body>
+</html>
+
