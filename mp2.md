@@ -29,7 +29,7 @@ $ cd [mp2_repository]
 Pull the image from Docker Hub and start a container.
 ```shell
 $ docker pull ntuos/mp2
-$ docker run -it -v $(pwd)/xv6:/home/os_mp2/xv6 ntuos/mp2
+$ docker run -it -v $(pwd)/xv6:/home/mp2/xv6 ntuos/mp2
 ```
     
 ## Explanation
@@ -89,6 +89,7 @@ In the above example, the top-level page-table page has mappings for entries 0 a
 * The function `freewalk` in `kernel/vm.c` may be inspirational.
 * Define the prototype for `vmprint` in `kernel/defs.h` so that you can call it from `kernel/exec.c`.
 * Use `%p` in your `printf` calls to print out full 64-bit hex PTEs and addresses as shown in the example.
+* File under `material/` may help.
 
 **(10%)** The figure below shows a process’s user address space, with its initial stack. **In report, explain the output of `vmprint` in terms of the figure below and answer questions:**
 * What does page 0 contain?
@@ -184,10 +185,10 @@ To add system calls, you need to give xv6:
 * Each of these functions should use its argument in a variable in the `proc` structure (see `kernel/proc.h`).
 * The functions to retrieve system call arguments from user space are in `kernel/syscall.c`.
 * You can see examples of their use in `kernel/sysproc.c`.
-* You may be stopped by some data type issues in xv6. Try to solve it.
+* If you're stopped by type issues, solve it.
 * If you want to know what each field repesents, see [SPECs](./mp2#specs) below.
 
-Run `mp2test`, which will fail at the first `mmap` call but give you some informational messages. We defined `PROT_READ` etc for you in `kernel/fcntl.h`.
+Run `mp2test`, which will fail at the first `mmap` call but give you some informational messages.
 
 ## Implementation
 
@@ -239,9 +240,11 @@ Find an unused region in the process's address space in which to map the file, a
 * Read **Section 8.13** of the [xv6 book](https://pdos.csail.mit.edu/6.828/2020/xv6/book-riscv-rev1.pdf).
 * Recall what you have written in report for [Print a Page Table](/mp2#print-a-page-table-20) section.
 * Write your implementation code in `sys_mmap()`, the function you just added in [Add System Call Stubs](/mp2#add-system-call-stubs-5) section. But you can define your VMA wherever is convenient for you.
-* Take a look at the [SPECs](/mp2#specs). Think about how to manage the arguments and return value of the system call `mmap` via VMA.
+* TA defined `PROT_READ` etc for you in `kernel/fcntl.h`.
 
-If all goes well, by running `mp2test`, the first test `mmap bare` should succeed, but the mmap-ed memory will cause at least one, perhaps two, page fault (and thus lazy allocation) and kill `mp2test`. [See sample execution](./mp2#sample-execution)
+If all goes well, by running `mp2test`, the first test `mmap bare` should succeed, but the mmap-ed memory will cause page fault (and thus lazy allocation) and kill `mp2test`. [See sample execution](./mp2#sample-execution)
+
+> **Note**: In `mp2test.c`, you can comment out some code such as `munmap` system call, or insert some print functions, to adjust the test.
 
 ### `mmap` with Lazy Allocation (20%)
 
@@ -279,8 +282,6 @@ To handle page-fault in a mmap-ed region:
 
 Run `mp2test`. It should pass the test `mmap lazy` and stop at the first `munmap` test. [See sample execution](./mp2#sample-execution)
 
-> **Note**: You can comment out some code in `mp2test.c`, such as `munmap` system call, to adjust the test.
-
 ### Bare `munmap` (10%)
 
 Find the VMA for the address range and unmap the specified pages. If `munmap` removes all pages of a previous `mmap`, it should decrement the reference count of the corresponding `struct file`. If an unmapped page has been modified and the file is mapped `MAP_SHARED`, write the page back to the file.
@@ -295,7 +296,7 @@ Ideally your implementation would only write back `MAP_SHARED` pages that the pr
 
 Run `mp2test`. The test `munmap bare` should pass. [See sample execution](./mp2#sample-execution)
 
-> **Note**: Remember to undo the changes to `mp2test.c` you've made in last section, if any.
+> **Note**: Remember to undo some changes you've made in `mp2test.c`.
 
 ### Reclaim mmap-ed Files (5%)
 
@@ -331,15 +332,15 @@ When you're done, you should see this output:
 $ mp2test
 mp2_test starting
 test mmap bare
-test mmap bare: OK
+test mmap bare: PASS
 test mmap lazy
-test mmap lazy: OK
+test mmap lazy: PASS
 test munmap bare
-test munmap bare: OK
+test munmap bare: PASS
 test munmap exit
-test munmap exit: OK
+test munmap exit: PASS
 test shared virtual memory
-test shared virtual memory: OK
+test shared virtual memory: PASS
 mp2test: all tests succeeded
 ```
 
@@ -393,19 +394,11 @@ In order not to make confusion, MP2-Preliminary (Early Bird) will open until Apr
 
 * If you submit **MP2-Preliminary (Early Bird)**, when judging source code, **your code in Preliminary part** (i.e. [Print a Page Table](/mp2#print-a-page-table-20) and [Add System Call Stubs](/mp2#add-system-call-stubs-5)) **before the deadline of Early Bird will be judged and graded**. (TA will checkout your repository to latest commit before the deadline).
 * If you want to keep working on repository and don't want to affect grading, you can open a new branch and merge it back afterward. Leave your solution in `master` branch.
-* Only if you submit **MP2-Bonus** will TA grade on [Shared Physical Memory](/mp2#shared-physical-memory-20) section.
+* Only if you submit **MP2-Bonus** will TA grade on [Bonus](/mp2#bonus) part.
 
 ### Source Code
 
-Push your xv6 source code to GitHub. Your final repository should look like following hierarchy:
-
-```
-Repository
-└── xv6
-    ├── user
-    ├── kernel
-    └── ...
-```
+Push your xv6 source code to your MP2 repository on GitHub.
 
 * Make sure your xv6 can be compiled.
 * Run `make clean` before you push.
@@ -417,9 +410,9 @@ Repository
 * mmap(2) — Linux manual page\
   [https://man7.org/linux/man-pages/man2/mmap.2.html](https://man7.org/linux/man-pages/man2/mmap.2.html)
 * xv6 — A simple, Unix-like teaching operating system by MIT\
-[https://pdos.csail.mit.edu/6.828/2020/xv6/book-riscv-rev1.pdf](https://pdos.csail.mit.edu/6.828/2020/xv6/book-riscv-rev1.pdf)
+  [https://pdos.csail.mit.edu/6.828/2020/xv6/book-riscv-rev1.pdf](https://pdos.csail.mit.edu/6.828/2020/xv6/book-riscv-rev1.pdf)
 * Linux Kernel - The Process Address Space — sathya's Blog\
-[https://sites.google.com/site/knsathyawiki/example-page/chapter-15-the-process-address-space](https://sites.google.com/site/knsathyawiki/example-page/chapter-15-the-process-address-space)
+  [https://sites.google.com/site/knsathyawiki/example-page/chapter-15-the-process-address-space](https://sites.google.com/site/knsathyawiki/example-page/chapter-15-the-process-address-space)
 * Advanced Programming in the UNIX® Environment\
-[https://www.oreilly.com/library/view/advanced-programming-in/9780321638014/](https://www.oreilly.com/library/view/advanced-programming-in/9780321638014/)
+  [https://www.oreilly.com/library/view/advanced-programming-in/9780321638014/](https://www.oreilly.com/library/view/advanced-programming-in/9780321638014/)
 
