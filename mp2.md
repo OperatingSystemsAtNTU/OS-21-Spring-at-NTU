@@ -9,7 +9,7 @@ Shared memory is also a method of conserving memory space by directing accesses 
 
 **Portable Operating System Interface** (**POSIX**) provides a standardized [shm_open](https://pubs.opengroup.org/onlinepubs/007908799/xsh/shm_open.html) application programming interface (API) for using shared memory. POSIX's IPC (part of the [POSIX:XSI Extension](https://pubs.opengroup.org/onlinepubs/009604599/basedefs/xbd_chap02.html)) also provides the shared memory facility in [sys/shm.h](https://pubs.opengroup.org/onlinepubs/007908799/xsh/sysshm.h.html).
 
-What's more, and you might be more familiar with, POSIX provides the [mmap](https://en.wikipedia.org/wiki/Mmap) API for mapping files into memory; a mapping can be shared, allowing the file's contents to be used as shared memory.
+What’s more, POSIX provides the [mmap](https://en.wikipedia.org/wiki/Mmap) API for mapping files into memory, the one you might be more familiar with; a mapping can be shared, allowing the file’s contents to be used as shared memory.
 
 In MP2, you'll add `mmap` and `munmap` to xv6, focusing on memory-mapped (mmap-ed) files.
 
@@ -43,11 +43,11 @@ $ docker run -it -v $(pwd)/xv6:/home/mp2/xv6 ntuos/mp2
   * [munmap](/mp2#bare-munmap-10) (10%+5%)
 * [Shared Virtual Memory](/mp2#shared-virtual-memory-15) (15%)
 
-## Preliminary 
+## Preliminary
 
 ### Print a Page Table (20%)
 
-**(10%)** Define a function called `vmprint()`. It should take a `pagetable_t` argument, and print that pagetable in format described below.
+**(10%)** Define a function called `vmprint()`. It should take a `pagetable_t` argument, and print that page table in format described below.
 
 #### Format
 
@@ -88,7 +88,7 @@ In the above example, the top-level page-table page has mappings for entries 0 a
 * Use the macros at the end of the file `kernel/riscv.h`.
 * The function `freewalk` in `kernel/vm.c` may be inspirational.
 * Define the prototype for `vmprint` in `kernel/defs.h` so that you can call it from `kernel/exec.c`.
-* Use `%p` in your `printf` calls to print out full 64-bit hex PTEs and addresses as shown in the example.
+* Use `%p` in your `printf` calls to print out full 64-bit hex PTEs and addresses.
 * File under `material/` may help.
 
 **(10%)** The figure below shows a process’s user address space, with its initial stack. **In report, explain the output of `vmprint` in terms of the figure below and answer questions:**
@@ -98,13 +98,13 @@ In the above example, the top-level page-table page has mappings for entries 0 a
 
 <img src="https://i.imgur.com/Aw6Rwb6.png" width="550" />
 
-**Note**: Remember to comment out or remove the additional code you just added in `kernel/exec.c`, but keep `vmprint`. Because we will grade your `vmprint` and it also helps you debugging in later sections.
+**Note**: Remember to comment out or remove the additional code you just added in `kernel/exec.c` before `git push`, but keep `vmprint`. TA will judge your `vmprint()` and it also helps you debugging in later sections.
 
 ### Generate a Page Fault (10%)
 
 **Lazy allocation** of user-space heap memory is one of the many neat tricks an OS can play with page table hardware.
 
-xv6 applications ask the kernel for heap memory using the `sbrk()` system call, which is implemented at the function `sys_sbrk()` in `kernel/sysproc.c`. In xv6 kernel, `sbrk()` allocates physical memory and maps it into the process's virtual address space. It can take a long time for a kernel to allocate and map memory for a large request. For example, consider that a gigabyte consists of 262,144 4096-byte pages; that's a huge number of allocations.
+xv6 applications ask the kernel for heap memory using the `sbrk()` system call, which is implemented at the function `sys_sbrk()` in `kernel/sysproc.c`. In xv6 kernel, `sbrk()` allocates physical memory and maps it into the process's virtual address space. It can take a long time for a kernel to allocate and map memory for a large memory request. For example, consider that a gigabyte consists of 262,144 4096-byte pages; that's a huge number of allocations.
 
 In addition, some programs allocate more memory than they actually use (e.g., to implement sparse arrays), or allocate memory well in advance of use.
 
@@ -120,6 +120,11 @@ Delete page allocation from the `sbrk(n)` system call implementation (`sys_sbrk(
 
 Try to guess what the result of this modification will be: What will break?
 
+#### Hint
+* Read **Section 4.6** of the [xv6 book](https://pdos.csail.mit.edu/6.828/2020/xv6/book-riscv-rev1.pdf) and related file `kernel/trap.c`.
+* You should delete the call to `growproc()`.
+* You still need to increase process's size.
+
 After making modifications, boot xv6 and type `echo hi` to the shell. You should see something like this:
 
 ```shell
@@ -132,12 +137,7 @@ panic: uvmunmap: not mapped
 
 The "usertrap(): ..." message is from the user trap handler in `kernel/trap.c`. It has caught an exception that it does not know how to handle. The "stval=0x0..04008" indicates that the virtual address that caused the page fault is 0x4008. **In report, explain why this page fault occurs.**
 
-#### Hint
-* Read **Section 4.6** of the [xv6 book](https://pdos.csail.mit.edu/6.828/2020/xv6/book-riscv-rev1.pdf) and related file `kernel/trap.c`.
-* You should delete the call to `growproc()`.
-* You still need to increase process's size.
-
-**Note**: Make sure you fully understand [Print a Page Table](/mp2#print-a-page-table-20) and [Generate a Page Fault](/mp2#generate-a-page-fault-10) sections, and remember to undo your revision in `sbrk(n)` before moving on next section.
+**Note**: Remember to undo your revision in `sbrk(n)` before `git push`. No code will be graded in this section.
 
 ### Add System Call Stubs (5%)
 
@@ -184,9 +184,9 @@ To add system calls, you need to give xv6:
 * Read **Chapter 2**, **Section 4.3** and **Section 4.4** of the [xv6 book](https://pdos.csail.mit.edu/6.828/2020/xv6/book-riscv-rev1.pdf).
 * Each of these functions should use its argument in a variable in the `proc` structure (see `kernel/proc.h`).
 * The functions to retrieve system call arguments from user space are in `kernel/syscall.c`.
-* You can see examples of their use in `kernel/sysproc.c`.
+* You can see other system calls as examples in `kernel/sysproc.c`.
 * If you're stopped by type issues, solve it.
-* If you want to know what each field repesents, see [SPECs](./mp2#specs) below.
+* If you want to know what each field represents, see [SPECs](./mp2#specs) below.
 
 Run `mp2test`, which will fail at the first `mmap` call but give you some informational messages.
 
@@ -196,7 +196,9 @@ If you try doing the implementation, **you need to briefly explain how you manag
 * Following sections are expected to be **DIFFICULT**. You are encouraged to discuss with other classmates, but do not share code or report. **Write the code on your own** and **write the report in your own words**.
 * **If your explanation does not correspond to your code, you are also suspected of committing plagiarism.** TAs will decide whether you can get partial score for corresponding section, or fail this course.
 * List your assumptions, if any. Of course, any assumption should not violate the [SPECs](./mp2#specs).
-* **If your code was based on some critical assumptions and you lack them in report, TAs will decide whether you get partial score or get 0 for corresponding section.** In some severe cases, you might be suspected of committing plagiarism.
+* **If your code was based on some critical assumptions and you lack them in report, TAs will decide whether you get partial score or get 0 for corresponding section.** In some severe cases, you may be suspected of committing plagiarism.
+
+**Note**: Make sure you fully understand [Print a Page Table](/mp2#print-a-page-table-20) and [Generate a Page Fault](/mp2#generate-a-page-fault-10) sections before moving on.
 
 ### SPECs
 
@@ -209,7 +211,7 @@ void *mmap(void *addr, size_t length, int prot, int flags,
 
 * `addr` will always be zero in MP2.
 * `length` is the number of bytes to map; it might not be the same as the file's length.
-* `prot` indicates whether the memory should be mapped *readable*, *writeable*, and/or *executable*; you can assume that `prot` is `PROT_READ` or `PROT_WRITE` or both.
+* `prot` indicates whether the memory should be mapped *readable*, *writeable*, and/or *executable*; i.e., `prot` is `PROT_READ` or `PROT_WRITE` or both.
 * `flags` will be one of the following bits:
   * `MAP_SHARED`: modifications to the mapped memory should be written back to the file.
   * `MAP_PRIVATE`: modifications should not be written back.\
@@ -226,20 +228,20 @@ The kernel should decide the **virtual address** where to map the file. `mmap` r
 int munmap(void *addr, size_t length);
 ```
 
-`munmap` should remove `mmap` mappings in address range indicated by `addr` and `length`. If the process has modified the memory and has it mapped `MAP_SHARED`, the modifications should first be written to the file.
+`munmap` should remove `mmap` mappings in address range indicated by `addr` and `length`. If the mappings has been mapped `MAP_SHARED` and the process has modified them, the modifications should first be written to the file.
 
 ### Bare `mmap` (15%)
 
 To keep track of what `mmap` has mapped for each process, **define a VMA (virtual memory area) structure for xv6 yourself**, recording the address, length, permissions, file, etc. for a virtual memory range created by `mmap`. You can refer to [Linux's VMA](https://sites.google.com/site/knsathyawiki/example-page/chapter-15-the-process-address-space#TOC-Virtual-Memory-Areas).
 
-Since xv6 kernel doesn't have a memory allocator in the kernel, it's OK to declare a fixed-size array of VMAs and allocate from that array as needed. A size of **16** should be sufficient.
-
-Find an unused region in the process's address space in which to map the file, and add a VMA to the process's table of mapped regions. The VMA should contain a pointer to a `struct file` for the file being mapped. `mmap` should increase the file's reference count so that the structure doesn't disappear when the file is closed.
+Find the **unused region** in the process's address space in which to map the file, and **add the VMA to the process's table of mapped regions**. The VMA should contain a pointer to a `struct file` for the file being mapped. `mmap` should increase the file's reference count so that the structure doesn't disappear when the file is closed.
 
 #### Hint
 * Read **Section 8.13** of the [xv6 book](https://pdos.csail.mit.edu/6.828/2020/xv6/book-riscv-rev1.pdf).
 * Recall what you have written in report for [Print a Page Table](/mp2#print-a-page-table-20) section.
-* Write your implementation code in `sys_mmap()`, the function you just added in [Add System Call Stubs](/mp2#add-system-call-stubs-5) section. But you can define your VMA wherever is convenient for you.
+* You can define your VMA structure wherever is convenient for you. Of course, it must not affect the `Makefile`.
+* It's OK to declare a fixed-size array of VMAs and allocate from that array as needed. A size of **16** should be sufficient.
+* Write your implementation code in `sys_mmap()`, the function you just added in [Add System Call Stubs](/mp2#add-system-call-stubs-5) section.
 * TA defined `PROT_READ` etc for you in `kernel/fcntl.h`.
 
 If all goes well, by running `mp2test`, the first test `mmap bare` should succeed, but the mmap-ed memory will cause page fault (and thus lazy allocation) and kill `mp2test`. [See sample execution](./mp2#sample-execution)
@@ -252,7 +254,7 @@ Fill in page table lazily, in response to page faults. That is, `mmap` should no
 
 Modify the code in `kernel/trap.c` to respond to a page fault from user space by mapping a newly-allocated page of physical memory at the faulting address, and then returning back to user space to let the process continue executing.
 
-To handle page-fault in a mmap-ed region:
+To handle page fault in a mmap-ed region:
 * Add code to allocate a page of physical memory.
 * Read 4096 bytes of the relevant file into that page.
 * Map it into the user address space.
@@ -265,7 +267,6 @@ To handle page-fault in a mmap-ed region:
 * You can check whether a fault is a page fault by seeing if `r_scause()` is **13** or **15** in `usertrap()`.
 * `r_stval()` returns the RISC-V `stval` register, which contains the virtual address that caused the page fault.
 * Use `PGROUNDDOWN()` to round the faulting virtual address down to a page boundary.
-* Kill the process if it page-faults on a virtual memory address higher than any allocated with `sbrk()`.
 * Read the file `kernel/kalloc.c`, which contains code for allocating and freeing physical memory.
 * Steal code from `uvmalloc()` in `kernel/vm.c`, which is what `sbrk()` calls (via `growproc()`). You'll need to call `kalloc()` and `mappages()`.
 * Handle out-of-memory correctly: If `kalloc()` fails in the page fault handler, kill the current process.
@@ -275,7 +276,7 @@ To handle page-fault in a mmap-ed region:
   ```
   It takes an offset argument at which to read in the file. If `user_dst==1`, then `dst` is a user virtual address; otherwise, `dst` is a kernel address.
 * You will have to lock/unlock the inode passed to `readi`. That is, caller must hold `ip->lock`.
-* Use your `vmprint` function to print the content of a page table for debugging.
+* Use your `vmprint` function to print the content of page table for debugging.
 * If the kernel crashes, look up `sepc` in `kernel/kernel.asm`.
 * If you see the error "incomplete type proc", include `spinlock.h` then `proc.h`.
 * If `uvmunmap()` panics, modify it to not panic when some pages aren't mapped.
@@ -284,9 +285,9 @@ Run `mp2test`. It should pass the test `mmap lazy` and stop at the first `munmap
 
 ### Bare `munmap` (10%)
 
-Find the VMA for the address range and unmap the specified pages. If `munmap` removes all pages of a previous `mmap`, it should decrement the reference count of the corresponding `struct file`. If an unmapped page has been modified and the file is mapped `MAP_SHARED`, write the page back to the file.
+Find the VMA for the address range and unmap the specified pages. If `munmap` removes all pages of a previous `mmap`, it should decrement the reference count of the corresponding `struct file`. If the page to be unmapped has been modified and the file is mapped `MAP_SHARED`, write the page back to the file.
 
-Ideally your implementation would only write back `MAP_SHARED` pages that the program actually modified. The dirty bit (D) in the RISC-V PTE indicates whether a page has been written. However, `mp2test` does not check that non-dirty pages are not written back; thus you can get away with writing pages back without looking at D bits. 
+Ideally, your implementation would only write back `MAP_SHARED` pages that the program actually modified. The dirty bit (D) in the RISC-V PTE indicates whether a page has been written. However, TA will not check that non-dirty pages are not written back; thus you can get away with writing pages back without looking at D bits.
 
 #### Hint
 
@@ -319,6 +320,7 @@ Modify `fork` to ensure that the child has the same mapped regions as the parent
 In page fault handler of the child, **allocate a new physical page** for itself.
 
 #### Hint
+* Handle the parent-to-child memory copy correctly.
 * Increment the reference count for a VMA's `struct file`.
 
 Sharing a physical page with the parent would be cooler, but it would require more implementation work. You can try it in [Bonus](/mp2#bonus) part.
@@ -392,9 +394,9 @@ Submit your reports via Gradescope:
 
 In order not to make confusion, MP2-Preliminary (Early Bird) will open until April 6th. Other three will open from April 7th.
 
-* If you submit **MP2-Preliminary (Early Bird)**, when judging source code, **your code in Preliminary part** (i.e. [Print a Page Table](/mp2#print-a-page-table-20) and [Add System Call Stubs](/mp2#add-system-call-stubs-5)) **before the deadline of Early Bird will be judged and graded**. (TA will checkout your repository to latest commit before the deadline).
+* If you submit **MP2-Preliminary (Early Bird)**, when we judging source code, **your code in Preliminary part** (i.e. [Print a Page Table](/mp2#print-a-page-table-20) and [Add System Call Stubs](/mp2#add-system-call-stubs-5)) **before the deadline of Early Bird will be judged and graded**. (TA will checkout your repository to latest commit before the deadline).
 * If you want to keep working on repository and don't want to affect grading, you can open a new branch and merge it back afterward. Leave your solution in `master` branch.
-* Only if you submit **MP2-Bonus** will TA grade on [Bonus](/mp2#bonus) part.
+* Only if you submit **MP2-Bonus** will TA grade your [Bonus](/mp2#bonus) part.
 
 ### Source Code
 
