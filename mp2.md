@@ -90,7 +90,7 @@ In the above example, the top-level page-table page has mappings for entries 0 a
 * The function `freewalk` in `kernel/vm.c` may be inspirational.
 * Define the prototype for `vmprint` in `kernel/defs.h` so that you can call it from `kernel/exec.c`.
 * Use `%p` in your `printf` calls to print out full 64-bit hex PTEs and addresses.
-~~* File under `material/` may help.~~
+* ~~File under `material/` may help.~~
 
 **(10%)** The figure below shows a process’s user address space, with its initial stack. **In report, explain the output of `vmprint` in terms of the figure below and answer questions:**
 * What does page 0 contain?
