@@ -52,15 +52,16 @@ $ docker run -it -v $(pwd)/xv6:/home/mp2/xv6 ntuos/mp2
 #### Format
 
 ```shell
-page table 0x0000000087f6e000
- ..0: pte 0x0000000021fda801 pa 0x0000000087f6a000
- .. ..0: pte 0x0000000021fda401 pa 0x0000000087f69000
- .. .. ..0: pte 0x0000000021fdac1f pa 0x0000000087f6b000
- .. .. ..1: pte 0x0000000021fda00f pa 0x0000000087f68000
- .. .. ..2: pte 0x0000000021fd9c1f pa 0x0000000087f67000
- ..255: pte 0x0000000021fdb401 pa 0x0000000087f6d000
- .. ..511: pte 0x0000000021fdb001 pa 0x0000000087f6c000
- .. .. ..510: pte 0x0000000021fdd807 pa 0x0000000087f76000
+// 'Update'
+page table 0x0000000087f6f000
+ ..0: pte 0x0000000021fdac01 pa 0x0000000087f6b000
+ .. ..0: pte 0x0000000021fda801 pa 0x0000000087f6a000
+ .. .. ..0: pte 0x0000000021fdb01f pa 0x0000000087f6c000
+ .. .. ..1: pte 0x0000000021fda40f pa 0x0000000087f69000
+ .. .. ..2: pte 0x0000000021fda01f pa 0x0000000087f68000
+ ..255: pte 0x0000000021fdb801 pa 0x0000000087f6e000
+ .. ..511: pte 0x0000000021fdb401 pa 0x0000000087f6d000
+ .. .. ..510: pte 0x0000000021fddc07 pa 0x0000000087f77000
  .. .. ..511: pte 0x0000000020001c0b pa 0x0000000080007000
 ```
 
@@ -89,7 +90,7 @@ In the above example, the top-level page-table page has mappings for entries 0 a
 * The function `freewalk` in `kernel/vm.c` may be inspirational.
 * Define the prototype for `vmprint` in `kernel/defs.h` so that you can call it from `kernel/exec.c`.
 * Use `%p` in your `printf` calls to print out full 64-bit hex PTEs and addresses.
-* File under `material/` may help.
+~~* File under `material/` may help.~~
 
 **(10%)** The figure below shows a process’s user address space, with its initial stack. **In report, explain the output of `vmprint` in terms of the figure below and answer questions:**
 * What does page 0 contain?
