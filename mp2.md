@@ -34,14 +34,14 @@ $ docker run -it -v $(pwd)/xv6:/home/mp2/xv6 ntuos/mp2
     
 ## Explanation
 
-* [Preliminary](/mp2#preliminary) (35%)
-  * [Print a Page Table](/mp2#print-a-page-table-20) (10%+10%)
-  * [Generate a Page Fault](/mp2#generate-a-page-fault-10) (10%)
-  * [Add System Call Stubs](/mp2#add-system-call-stubs-5) (5%)
-* [Implementation](/mp2#implementation) (50%)
-  * [mmap](/mp2#bare-mmap-15) (15%+20%)
-  * [munmap](/mp2#bare-munmap-10) (10%+5%)
-* [Shared Virtual Memory](/mp2#shared-virtual-memory-15) (15%)
+* [Preliminary](./mp2#preliminary) (35%)
+  * [Print a Page Table](./mp2#print-a-page-table-20) (10%+10%)
+  * [Generate a Page Fault](./mp2#generate-a-page-fault-10) (10%)
+  * [Add System Call Stubs](./mp2#add-system-call-stubs-5) (5%)
+* [Implementation](./mp2#implementation) (50%)
+  * [mmap](./mp2#bare-mmap-15) (15%+20%)
+  * [munmap](./mp2#bare-munmap-10) (10%+5%)
+* [Shared Virtual Memory](./mp2#shared-virtual-memory-15) (15%)
 
 ## Preliminary
 
@@ -198,7 +198,7 @@ If you try doing the implementation, **you need to briefly explain how you manag
 * List your assumptions, if any. Of course, any assumption should not violate the [SPECs](./mp2#specs).
 * **If your code was based on some critical assumptions and you lack them in report, TAs will decide whether you get partial score or get 0 for corresponding section.** In some severe cases, you may be suspected of committing plagiarism.
 
-**Note**: Make sure you fully understand [Print a Page Table](/mp2#print-a-page-table-20) and [Generate a Page Fault](/mp2#generate-a-page-fault-10) sections before moving on.
+**Note**: Make sure you fully understand [Print a Page Table](./mp2#print-a-page-table-20) and [Generate a Page Fault](./mp2#generate-a-page-fault-10) sections before moving on.
 
 ### SPECs
 
@@ -238,10 +238,10 @@ Find the **unused region** in the process's address space in which to map the fi
 
 #### Hint
 * Read **Section 8.13** of the [xv6 book](https://pdos.csail.mit.edu/6.828/2020/xv6/book-riscv-rev1.pdf).
-* Recall what you have written in report for [Print a Page Table](/mp2#print-a-page-table-20) section.
+* Recall what you have written in report for [Print a Page Table](./mp2#print-a-page-table-20) section.
 * You can define your VMA structure wherever is convenient for you. Of course, it must not affect the `Makefile`.
 * It's OK to declare a fixed-size array of VMAs and allocate from that array as needed. A size of **16** should be sufficient.
-* Write your implementation code in `sys_mmap()`, the function you just added in [Add System Call Stubs](/mp2#add-system-call-stubs-5) section.
+* Write your implementation code in `sys_mmap()`, the function you just added in [Add System Call Stubs](./mp2#add-system-call-stubs-5) section.
 * TA defined `PROT_READ` etc for you in `kernel/fcntl.h`.
 
 If all goes well, by running `mp2test`, the first test `mmap bare` should succeed, but the mmap-ed memory will cause page fault (and thus lazy allocation) and kill `mp2test`. [See sample execution](./mp2#sample-execution)
@@ -250,7 +250,7 @@ If all goes well, by running `mp2test`, the first test `mmap bare` should succee
 
 ### `mmap` with Lazy Allocation (20%)
 
-Fill in page table lazily, in response to page faults. That is, `mmap` should not allocate physical memory or read the file. Instead, do that in page fault handling code in (or called by) `usertrap` in `kernel/trap.c`. As mentioned in [Generate a Page Fault](/mp2#generate-a-page-fault-10) section, the reason to be lazy is to ensure that `mmap` of a large file is fast, and that `mmap` of a file larger than physical memory is possible.
+Fill in page table lazily, in response to page faults. That is, `mmap` should not allocate physical memory or read the file. Instead, do that in page fault handling code in (or called by) `usertrap` in `kernel/trap.c`. As mentioned in [Generate a Page Fault](./mp2#generate-a-page-fault-10) section, the reason to be lazy is to ensure that `mmap` of a large file is fast, and that `mmap` of a file larger than physical memory is possible.
 
 Modify the code in `kernel/trap.c` to respond to a page fault from user space by mapping a newly-allocated page of physical memory at the faulting address, and then returning back to user space to let the process continue executing.
 
@@ -262,8 +262,8 @@ To handle page fault in a mmap-ed region:
 
 #### Hint
 * `kernel/trap.c` catches an exception, particularly to respond a page fault in MP2.
-* Read the explanation in [Generate a Page Fault](/mp2#generate-a-page-fault-10) section again, to see how **lazy allocation** mechanism works in xv6.
-* Recall what you have written in report for [Print a Page Table](/mp2#print-a-page-table-20) and [Generate a Page Fault](/mp2#generate-a-page-fault-10) sections.
+* Read the explanation in [Generate a Page Fault](./mp2#generate-a-page-fault-10) section again, to see how **lazy allocation** mechanism works in xv6.
+* Recall what you have written in report for [Print a Page Table](./mp2#print-a-page-table-20) and [Generate a Page Fault](./mp2#generate-a-page-fault-10) sections.
 * You can check whether a fault is a page fault by seeing if `r_scause()` is **13** or **15** in `usertrap()`.
 * `r_stval()` returns the RISC-V `stval` register, which contains the virtual address that caused the page fault.
 * Use `PGROUNDDOWN()` to round the faulting virtual address down to a page boundary.
@@ -291,7 +291,7 @@ Ideally, your implementation would only write back `MAP_SHARED` pages that the p
 
 #### Hint
 
-* Similar to what you've done in [Bare mmap](/mp2#bare-mmap-15) section, write your implementation code in `sys_munmap()`.
+* Similar to what you've done in [Bare mmap](./mp2#bare-mmap-15) section, write your implementation code in `sys_munmap()`.
 * You may want to use `uvmunmap`.
 * Look at `filewrite` in `kernel/file.c` for inspiration.
 
@@ -323,7 +323,7 @@ In page fault handler of the child, **allocate a new physical page** for itself.
 * Handle the parent-to-child memory copy correctly.
 * Increment the reference count for a VMA's `struct file`.
 
-Sharing a physical page with the parent would be cooler, but it would require more implementation work. You can try it in [Bonus](/mp2#bonus) part.
+Sharing a physical page with the parent would be cooler, but it would require more implementation work. You can try it in [Bonus](./mp2#bonus) part.
 
 Run `mp2test`. It should pass all tests. 
 
@@ -355,7 +355,7 @@ mp2test: all tests succeeded
 
 If two processes get the same file mmap-ed, share their physical pages.
 
-In [Shared Virtual Memory](/mp2#shared-virtual-memory-15) part, our solution allocates a new physical page for each page read from the mmap-ed file, even though **the data is also in kernel memory in the buffer cache**.
+In [Shared Virtual Memory](./mp2#shared-virtual-memory-15) part, our solution allocates a new physical page for each page read from the mmap-ed file, even though **the data is also in kernel memory in the buffer cache**.
 
 Modify your implementation to use that physical memory. 
 
@@ -364,19 +364,19 @@ Modify your implementation to use that physical memory.
 * You need to pin mmap-ed blocks into the buffer cache.
 * You need to worry about reference counts on physical pages.
 
-In report, **explain how you manage kernel page table** and **describe the difference** between the implementation of [Shared Virtual Memory](/mp2#shared-virtual-memory-15) and the one of [Shared Physical Memory](/mp2#shared-physical-memory-20).
+In report, **explain how you manage kernel page table** and **describe the difference** between the implementation of [Shared Virtual Memory](./mp2#shared-virtual-memory-15) and the one of [Shared Physical Memory](./mp2#shared-physical-memory-20).
 
 ## Submission
 
 The score in summary is:
-* [Preliminary](/mp2#preliminary) (35%)
-  * [Print a Page Table](/mp2#print-a-page-table-20) (10%+10%*)
-  * [Generate a Page Fault](/mp2#generate-a-page-fault-10) (10%*)
-  * [Add System Call Stubs](/mp2#add-system-call-stubs-5) (5%)
-* [Implementation](/mp2#implementation) (50%*)
-  * [mmap](/mp2#bare-mmap-15) (15%+20%)
-  * [munmap](/mp2#bare-munmap-10) (10%+5%)
-* [Shared Virtual Memory](/mp2#shared-virtual-memory-15) (15%)
+* [Preliminary](./mp2#preliminary) (35%)
+  * [Print a Page Table](./mp2#print-a-page-table-20) (10%+10%*)
+  * [Generate a Page Fault](./mp2#generate-a-page-fault-10) (10%*)
+  * [Add System Call Stubs](./mp2#add-system-call-stubs-5) (5%)
+* [Implementation](./mp2#implementation) (50%*)
+  * [mmap](./mp2#bare-mmap-15) (15%+20%)
+  * [munmap](./mp2#bare-munmap-10) (10%+5%)
+* [Shared Virtual Memory](./mp2#shared-virtual-memory-15) (15%)
 
 *Need to write report.
 
@@ -394,9 +394,9 @@ Submit your reports via Gradescope:
 
 In order not to make confusion, MP2-Preliminary (Early Bird) will open until April 6th. Other three will open from April 7th.
 
-* If you submit **MP2-Preliminary (Early Bird)**, when we judging source code, **your code in Preliminary part** (i.e. [Print a Page Table](/mp2#print-a-page-table-20) and [Add System Call Stubs](/mp2#add-system-call-stubs-5)) **before the deadline of Early Bird will be judged and graded**. (TA will checkout your repository to latest commit before the deadline).
+* If you submit **MP2-Preliminary (Early Bird)**, when we judging source code, **your code in Preliminary part** (i.e. [Print a Page Table](./mp2#print-a-page-table-20) and [Add System Call Stubs](./mp2#add-system-call-stubs-5)) **before the deadline of Early Bird will be judged and graded**. (TA will checkout your repository to latest commit before the deadline).
 * If you want to keep working on repository and don't want to affect grading, you can open a new branch and merge it back afterward. Leave your solution in `master` branch.
-* Only if you submit **MP2-Bonus** will TA grade your [Bonus](/mp2#bonus) part.
+* Only if you submit **MP2-Bonus** will TA grade your [Bonus](./mp2#bonus) part.
 
 ### Source Code
 
