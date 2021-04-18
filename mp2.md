@@ -318,7 +318,7 @@ Run `mp2test`. The test `munmap exit` should pass. [See sample execution](./mp2#
 
 Modify `fork` to ensure that the child has the same mapped regions as the parent. 
 
-~~In page fault handler of the child, **allocate a new physical page** for itself.~~
+~~In page fault handler of the child, **allocate a new physical page** for itself.~~\
 **(Update)** **Allocate a new physical page** for the child.
 
 #### Hint
