@@ -292,8 +292,8 @@ exited
 ## Explnation of task2
 
 `time_slot_size` is 5 ticks.
-1. When thread1 is running and $uptime()-st1 \geq 2$, thread1 will yield once. $st1$ is the time when thread1 started.
-2. When thread1 have yielded and $uptime()-st1 \geq 7$,, thread1 will create thread3. $st1$ is the time when thread1 started.
+1. When thread1 is running and `uptime()-st1` >= `2`, thread1 will yield once. `st1` is the time when thread1 started.
+2. When thread1 have yielded and `uptime()-st1` >= `7`,, thread1 will create thread3. `st1` is the time when thread1 started.
 
 ### 1. <strong>RR with tq=1, the output is:</strong>
 
@@ -390,7 +390,7 @@ exited
 ## Explnation of task3
 
 `time_slot_size` is 3 ticks.
-1. When thread1 is running and $uptime()-st1 \geq 2$,, thread1 will create thread3. $st1$ is the time when thread1 started.
+1. When thread1 is running and `uptime()-st1` >= `2`, thread1 will create thread3. `st1` is the time when thread1 started.
 
 
 ### 1. <strong>RR with tq=1, the output is:</strong>
