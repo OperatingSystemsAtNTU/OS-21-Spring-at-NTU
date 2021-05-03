@@ -151,6 +151,7 @@ When start threading, `thread->remain_execution_time` will be set to `time_slot_
 Threads may exit early, so its execution time can be less than `remain_execution_time`.
 
 ## What you need to do for scheduler
+
 * FCFS:
     Execute next thread when current thread exits.
 
@@ -217,6 +218,7 @@ exited
 ![](https://i.imgur.com/iqSh20L.png)
 
 ### 2. <strong>FCFS, the output is:</strong>
+
 ```bash=
 $ task1
 thread id 1 exec 15 ticks
@@ -235,6 +237,7 @@ exited
 ![](https://i.imgur.com/7nux2F3.png)
 
 ### 3. <strong>RR with tq=3, the output is:</strong>
+
 ```bash=
 $ task1
 thread id 2 exec 15 ticks
@@ -253,6 +256,7 @@ exited
 ![](https://i.imgur.com/fQqvHbh.png)
 
 ### 4. SJF, the output is:
+
 ```bash=
 $ task1
 thread id 1 exec 15 ticks
@@ -272,6 +276,7 @@ exited
 
 
 ### 5. PSJF, the output is:
+
 ```bash=
 $ task1
 thread id 1 exec 15 ticks
@@ -316,6 +321,7 @@ exited
 
 
 ### 2. <strong>FCFS, the output is:</strong>
+
 ```bash=
 $ task2
 thread id 1 exec 15 ticks
@@ -334,6 +340,7 @@ exited
 ![](https://i.imgur.com/mwUzoK5.png)
 
 ### 3. <strong>RR with tq=3, the output is:</strong>
+
 ```bash=
 $ task2
 thread id 2 exec 17 ticks
@@ -352,6 +359,7 @@ exited
 ![](https://i.imgur.com/HHtqaqy.png)
 
 ### 4. SJF, the output is:
+
 ```bash=
 $ task2
 thread id 1 exec 15 ticks
@@ -370,6 +378,7 @@ exited
 ![](https://i.imgur.com/6fLUnP7.png)
 
 ### 5. PSJF, the output is:
+
 ```bash=
 $ task2
 thread id 1 exec 15 ticks
@@ -394,6 +403,7 @@ exited
 
 
 ### 1. <strong>RR with tq=1, the output is:</strong>
+
 ```bash=
 $ task3
 thread id 3 exec 7 ticks
@@ -414,6 +424,7 @@ exited
 
 
 ### 2. <strong>FCFS, the output is:</strong>
+
 ```bash=
 $ task3
 thread id 1 exec 9 ticks
@@ -433,6 +444,7 @@ exited
 
 
 ### 3. <strong>RR with tq=3, the output is:</strong>
+
 ```bash=
 $ task3
 thread id 1 exec 9 ticks
@@ -452,6 +464,7 @@ exited
 
 
 ### 4. SJF, the output is:
+
 ```bash=
 $ task3
 thread id 1 exec 9 ticks
@@ -471,6 +484,7 @@ exited
 
 
 ### 5. PSJF, the output is:
+
 ```bash=
 $ task3
 thread id 3 exec 4 ticks
@@ -489,6 +503,7 @@ exited
 ![](https://i.imgur.com/SWr23bM.png)
 
 # Grading
+
 - Syscalls: 10%
 - FCFS: 15%
 - RR: 15%
@@ -500,10 +515,12 @@ exited
 3. Take a look at `struct context` in `/kernel/proc.h`. In context switching for processes, why does it only save callee registers and the ra register? (5%) 
 
 # How to submit
+
 Submit report in gradescope.
 Add 1 directory `myAns` in `xv6-riscv` .
 `myAns` should contain 3 directories, `kernel`, `user`, `SOL`
 Then push them to github class
+
 ```
 xv6-riscv/
 ├── myAns
@@ -533,17 +550,23 @@ xv6-riscv/
 |
 ....
 ```
+
 When we test your implementation
+
 1.We will replace the `kernel` and `user` in `xv6-riscv` with your `kernel` and `user`. 
 2. Copy the corresponding `thread.h`, `thread.c` to `xv6-riscv/user/thread.h`, `xv6-riscv/user/thread.c`
 3. In order to add some test files, we will use the our Makefile. Therefore, you shouldn't remove or add  files in `kernel` and `user`.
 4. You should check that you can compile successfully with original Makefile.
+
 # Early Bird (5%) 
+
 1. Finish the <strong>coding part</strong> before 5/18 23:59, and it should be a correct solution.  No early bird bonus for an incorrect answer.
 2. We'll announce the grade in 1 day. You can submit again after we grade the early bird.
 3. We will choose the higher one, if you submit for early bird and normal deadline.
+
 # Office Hour
-5/13 17:00~18:00 
-5/18 17:00~18:00
-5/20 17:00~18:00
-資工540
+
+#### 5/13 17:00~18:00 
+#### 5/18 17:00~18:00
+#### 5/20 17:00~18:00
+#### 資工540
