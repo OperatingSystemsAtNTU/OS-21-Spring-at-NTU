@@ -108,6 +108,7 @@ This won't happen, you only need to keep track on one countdown at the same time
 2. `int ticks` > 0, argument of `thrdstop()`
 3. `thrdstop_handler` must be some function of the program.
 4. If you want to, you can add more attributes in `struct proc` or remove our attributes for mp3.  You can initialize your attributes in `allocproc()` in `/kernel/proc.c`.
+
 ### <strong>int thrdresume(int thrdstop_context_id, int is_exit);</strong>
 1. If `is_exit` is zero, reload the context stored in `thrdstop_context[thrdstop_context_id]`, continue to execute that context.
 2. If `is_exit` isn't zero, then `thrdstop_context[thrdstop_context_id]` will become empty , and previous `thrdstop()` will be cancelled. For example:
@@ -212,6 +213,7 @@ exited
 |1| 3 time slot (15 ticks)|0|
 |2| 3 time slot (15 ticks)|0|
 |3| 3 time slot (15 ticks)|0|
+
 ![](https://i.imgur.com/iqSh20L.png)
 
 ### 2. <strong>FCFS, the output is:</strong>
@@ -247,6 +249,7 @@ exited
 |1| 3 time slot (15 ticks)|0|
 |2| 3 time slot (15 ticks)|0|
 |3| 3 time slot (15 ticks)|0|
+
 ![](https://i.imgur.com/fQqvHbh.png)
 
 ### 4. SJF, the output is:
@@ -258,11 +261,13 @@ thread id 3 exec 45 ticks
 
 exited
 ```
+
 |ID|maximum execution time|arrival time|
 | -------- | ------- |----|
 |1| 3 time slot (15 ticks)|0|
 |2| 3 time slot (15 ticks)|0|
 |3| 3 time slot (15 ticks)|0|
+
 ![](https://i.imgur.com/7TUHhKW.png)
 
 
@@ -275,6 +280,13 @@ thread id 3 exec 45 ticks
 
 exited
 ```
+
+|ID|maximum execution time|arrival time|
+| -------- | ------- |----|
+|1| 3 time slot (15 ticks)|0|
+|2| 3 time slot (15 ticks)|0|
+|3| 3 time slot (15 ticks)|0|
+
 ![](https://i.imgur.com/usrPntG.png)
 
 ## Explnation of task2
@@ -291,11 +303,13 @@ thread id 3 exec 38 ticks
 
 exited
 ```
+
 |ID|maximum execution time|arrival time|
 | -------- | ------- |----|
 |1| 3 time slot (15 ticks)|0|
 |2| 3 time slot (15 ticks)|0|
 |3| 3 time slot (15 ticks)|7|
+
 ![](https://i.imgur.com/ACbIGLY.png)
 
 
@@ -308,11 +322,13 @@ thread id 3 exec 38 ticks
 
 exited
 ```
+
 |ID|maximum execution time|arrival time|
 | -------- | ------- |----|
 |1| 3 time slot (15 ticks)|0|
 |2| 3 time slot (15 ticks)|0|
 |3| 3 time slot (15 ticks)|7|
+
 ![](https://i.imgur.com/mwUzoK5.png)
 
 ### 3. <strong>RR with tq=3, the output is:</strong>
@@ -324,11 +340,13 @@ thread id 3 exec 28 ticks
 
 exited
 ```
+
 |ID|maximum execution time|arrival time|
 | -------- | ------- |----|
 |1| 3 time slot (15 ticks)|0|
 |2| 3 time slot (15 ticks)|0|
 |3| 3 time slot (15 ticks)|<font color="#f00">17</font>|
+
 ![](https://i.imgur.com/HHtqaqy.png)
 
 ### 4. SJF, the output is:
@@ -340,11 +358,13 @@ thread id 3 exec 38 ticks
 
 exited
 ```
+
 |ID|maximum execution time|arrival time|
 | -------- | ------- |----|
 |1| 3 time slot (15 ticks)|0|
 |2| 3 time slot (15 ticks)|0|
 |3| 3 time slot (15 ticks)|7|
+
 ![](https://i.imgur.com/6fLUnP7.png)
 
 ### 5. PSJF, the output is:
@@ -356,11 +376,13 @@ thread id 3 exec 38 ticks
 
 exited
 ```
+
 |ID|maximum execution time|arrival time|
 | -------- | ------- |----|
 |1| 3 time slot (15 ticks)|0|
 |2| 3 time slot (15 ticks)|0|
 |3| 3 time slot (15 ticks)|7|
+
 ![](https://i.imgur.com/25UWCEs.png)
 
 ## Explnation of task3
@@ -378,11 +400,13 @@ thread id 2 exec 24 ticks
 
 exited
 ```
+
 |ID|maximum execution time|arrival time|
 | -------- | ------- |----|
 |1| 3 time slot (9 ticks)|0|
 |2| 4 time slot (12 ticks)|0|
 |3| 1 time slot (3 ticks)|2|
+
 ![](https://i.imgur.com/bO4Lstj.png)
 
 
@@ -396,11 +420,13 @@ thread id 3 exec 22 ticks
 
 exited
 ```
+
 |ID|maximum execution time|arrival time|
 | -------- | ------- |----|
 |1| 3 time slot (9 ticks)|0|
 |2| 4 time slot (12 ticks)|0|
 |3| 1 time slot (3 ticks)|2|
+
 ![](https://i.imgur.com/cXOkMHn.png)
 
 
@@ -413,11 +439,13 @@ thread id 2 exec 24 ticks
 
 exited
 ```
+
 |ID|maximum execution time|arrival time|
 | -------- | ------- |----|
 |1| 3 time slot (9 ticks)|0|
 |2| 4 time slot (12 ticks)|0|
 |3| 1 time slot (3 ticks)|2|
+
 ![](https://i.imgur.com/6qKr5qn.png)
 
 
@@ -430,11 +458,13 @@ thread id 2 exec 24 ticks
 
 exited
 ```
+
 |ID|maximum execution time|arrival time|
 | -------- | ------- |----|
 |1| 3 time slot (9 ticks)|0|
 |2| 4 time slot (12 ticks)|0|
 |3| 1 time slot (3 ticks)|2|
+
 ![](https://i.imgur.com/iI2IyjB.png)
 
 
@@ -447,11 +477,13 @@ thread id 2 exec 24 ticks
 
 exited
 ```
+
 |ID|maximum execution time|arrival time|
 | -------- | ------- |----|
 |1| 3 time slot (9 ticks)|0|
 |2| 4 time slot (12 ticks)|0|
 |3| 1 time slot (3 ticks)|2|
+
 ![](https://i.imgur.com/SWr23bM.png)
 
 # Grading
