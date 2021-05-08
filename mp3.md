@@ -2,7 +2,7 @@
 
 
  In this mp you will have to implement CPU scheduling with the algorithms below.
-
+ 
  given processes
 
 
@@ -14,7 +14,7 @@
 |P4|3|3|
 |P5|4|4|
 
-
+ 
 ### First Come First Served(FCFS):
 FCFS executes queued requests and processes in order of their arrival. Thus the order of the execution of the above mentioned processes will be 
  ![](https://i.imgur.com/qlqZgkX.png)
@@ -67,7 +67,7 @@ It should record how many ticks have passed since the program.
 
 * <strong>int thrdstop_interval;</strong>
 It should store when we should switch to thrd_handler. You can just store `ticks`, argument of thrdstop.
-  
+                       
 * <strong>uint64 thrdstop_handler_pointer;</strong>
 It should store where we need to switch, You can just store `thrdstop_handler`, argument of thrdstop.
 
@@ -89,7 +89,7 @@ Indicated that `thrdstop_context[i]` is occupied or not. They will all be `0` at
 * <strong> int thrdstop_context_id;</strong>
 When switch occurs, you should store the current context in `thrdstop_context[thrdstop_context_id]`. 
 
-You need to find where is the current program context when you are in `if(which_dev == 2)` block. You can find the answer in [xv6 book](https://pdos.csail.mit.edu/6.828/2020/xv6/book-riscv-rev1.pdf) chapter4. To simplify the problem, when you are in the `kerneltrap()`, the location of current program context is the same as the location when you are in the `usertrap()`. 
+You need to find where is the current program context when you are in `if(which_dev == 2)` block. You can find the answer in [xv6 book](https://pdos.csail.mit.edu/6.828/2020/xv6/book-riscv-rev1.pdf) chapter4. To simplify the problem, when you are in the `kerneltrap()`, the location of current program context is the same as the location when you are in the `usertrap()`. Moreover, what you do in `usertrap()`, just copy to corresponding location in `kerneltrap()`.
 
 The value of `thrdstop_context_id` is determined by `thrdstop()`
 1. If we call `thrdstop(n, -1, handler)`, you should find an empty slot in 
@@ -198,7 +198,7 @@ You can also run task1~3 in xv6.
 t1 will yield at first.
 
 ### 1. <strong>RR with tq=1, the output is:</strong>
-
+    
 ```bash=
 $ task1
 thread id 2 exec 35 ticks
