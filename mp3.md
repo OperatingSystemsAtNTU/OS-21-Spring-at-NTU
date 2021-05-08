@@ -119,7 +119,9 @@ thrdresume(10, 1);
 In this case, `handler2` won't be called, and `thrdstop_context_used[10]` should be set `0`. It is used for `thread_exit()`
 
 3. Return any value you want, we don't use it.
+
 #### Some guarantees
+
 1. `0` < `thrdstop_context_id` < `MAX_THRD_NUM`
 
 ### <strong>int cancelthrdstop( int thrdstop_context_id );</strong>
@@ -137,7 +139,7 @@ You can run `test1` in xv6.
 Find the output, if "PASS 1" and "PASS 2" exist, then you pass the test.
 If you pass `test1`, you probably get the score of syscall part. 
 
-## Explanation of some functions in template code
+## Explanation of some functions in template code in thread.c
 * <strong>void thread_start_threading(int time_slot_size);</strong>
 This function starts threading and determine `time_slot_size`.`time_slot_size` indicates that `my_thrdstop_handler` will be called every `time_slot_size` ticks.
 `time_slot_size` is also basic time unit. Time quantum in RR must be integer times of `time_slot_size` in mp3.
