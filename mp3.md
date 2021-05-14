@@ -56,7 +56,7 @@ After you finish the syscalls, you can move on to implement the scheduler. we wi
 
 Primary usage of this syscall is: 
 1. If a program calls `thrdstop()`, after `ticks` ticks that this program consumes, switch to execute the `thrdstop_handler`. 
-After you swtich to  `thrdstop_handler`  for the first time, you shouldn't swtich to it for the second time. The effect of this syscall just for one time. 
+After you switch to  `thrdstop_handler`  for the first time, you shouldn't switch to it for the second time. The effect of this syscall just for one time. 
 2. Store the current program context according to `thrdstop_context_id`.
 `thrdstop_context_id` and return value will be described below.
 
@@ -193,6 +193,9 @@ grade-mp3-PSJF  grade-mp3-SJF
 ```
 The test tasks run by those python files are task1, task2 and task3.
 You can also run task1~3 in xv6.
+
+***UPDATE***
+***grade-mp3-default is for scheduler of sample code (RR with TQ==1) .***
 
 ## Explnation of task1
 
