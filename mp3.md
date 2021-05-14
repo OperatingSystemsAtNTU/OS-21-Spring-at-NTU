@@ -194,8 +194,7 @@ grade-mp3-PSJF  grade-mp3-SJF
 The test tasks run by those python files are task1, task2 and task3.
 You can also run task1~3 in xv6.
 
-***UPDATE: ***
-***grade-mp3-default is for scheduler of sample code (RR with TQ==1) .***
+***UPDATE: grade-mp3-default is for the scheduler of sample code (RR with TQ==1) .***
 
 ## Explnation of task1
 
