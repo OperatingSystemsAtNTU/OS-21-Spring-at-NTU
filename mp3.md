@@ -122,7 +122,7 @@ In this case, `handler2` won't be called, and `thrdstop_context_used[10]` should
 
 #### Some guarantees
 
-1. `0` < `thrdstop_context_id` < `MAX_THRD_NUM`
+1. `0` <= `thrdstop_context_id` < `MAX_THRD_NUM`
 
 ### <strong>int cancelthrdstop( int thrdstop_context_id );</strong>
 This function cancels the `thrdstop()`.
@@ -131,7 +131,7 @@ It also save the current thread context into `thrdstop_context[thrdstop_context_
 The return value is the time counted down by `thrdstop()`.
 That is, return `proc->thrdstop_ticks`
 #### Some guarantees
-1. `0` < `thrdstop_context_id` < `MAX_THRD_NUM` or `thrdstop_context_id == -1`
+1. `0` <= `thrdstop_context_id` < `MAX_THRD_NUM` or `thrdstop_context_id == -1`
 
 
 ### Test the syscalls 
