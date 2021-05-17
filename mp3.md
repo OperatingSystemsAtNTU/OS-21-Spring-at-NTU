@@ -166,19 +166,24 @@ Threads may exit early, so its execution time can be less than `remain_execution
     (3) current thread has used up its time_quantum.
 
 * SJF:
+
     1. Choose the next thread based on `remain_execution_time` (the shortest one ). 
-    If `remain_execution_time` is the same, choose the thread arived earlier. The arrival order is determined by `thread->ID` (the smaller the earlier).
+    If `remain_execution_time` is the same, choose the thread arived earlier. The arrival order is determined by `thread->ID` (the smaller the earlier). 
     2. Execute the next thread when
     (1) current thread exits.
     (2) current thread yields.
+    
 
 * Preemptive SJF:
+
+
     1. Choose the next thread based on `remain_execution_time` (the shortest one ). 
-    If `remain_execution_time` is the same, choose the thread arived earlier. The arrival order is determined by `thread->ID` (the smaller the earlier).
+    If `remain_execution_time` is the same, choose the thread arived earlier. The arrival order is determined by `thread->ID` (the smaller the earlier). 
     2. Execute the next thread when
     (1) current thread exits.
     (2) current thread yields.
     (3) current thread has been executed`time_slot_size` ticks.
+    
 
 ## Test the scheduler
 
@@ -194,7 +199,7 @@ grade-mp3-PSJF  grade-mp3-SJF
 The test tasks run by those python files are task1, task2 and task3.
 You can also run task1~3 in xv6.
 
-***UPDATE: grade-mp3-default is for the scheduler of sample code (RR with TQ==1) .***
+<strong>UPDATE: grade-mp3-default is for the scheduler of sample code (RR with TQ==1) . </strong>
 
 ## Explnation of task1
 
@@ -535,9 +540,6 @@ xv6-riscv/
 │       ├── ...
 ...
 │   ├── SOL
-│   │   ├── Default
-│   │   │   ├── threads.c
-│   │   │   └── threads.h
 │   │   ├── FCFS
 │   │   │   ├── threads.c
 │   │   │   └── threads.h
