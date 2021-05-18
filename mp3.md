@@ -524,7 +524,7 @@ exited
 - PSJF: 20%
 - Report: 20% 
 1. Explain how you implement 3 syscalls. (9%)
-2. When you switch to the `thrdstop_handler`, what context do you store? Is it redundant to store all callee and caller registers? <strong>UPDATE: Need to explain your reason</strong>(6%)
+2. When you switch to the `thrdstop_handler`, what context do you store? Is it redundant to store all callee and caller registers? <strong>UPDATE: Explain your reason</strong>(6%)
 3. Take a look at `struct context` in `/kernel/proc.h`. In context switching for processes, why does it only save callee registers and the ra register? (5%) 
 
 # How to submit
