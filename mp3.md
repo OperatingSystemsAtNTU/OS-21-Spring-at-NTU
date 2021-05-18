@@ -167,14 +167,17 @@ Threads may exit early, so its execution time can be less than `remain_execution
 
 * SJF:
 
+
     1. Choose the next thread based on `remain_execution_time` (the shortest one ). 
     If `remain_execution_time` is the same, choose the thread arived earlier. The arrival order is determined by `thread->ID` (the smaller the earlier). 
     2. Execute the next thread when
     (1) current thread exits.
     (2) current thread yields.
-    
+ 
+ <strong>UPDATE: Choose the first thread based on remain_execution_time.</strong>   
 
 * Preemptive SJF:
+
 
 
     1. Choose the next thread based on `remain_execution_time` (the shortest one ). 
@@ -184,6 +187,7 @@ Threads may exit early, so its execution time can be less than `remain_execution
     (2) current thread yields.
     (3) current thread has been executed`time_slot_size` ticks.
     
+ <strong>UPDATE: Choose the first thread based on remain_execution_time.</strong>   
 
 ## Test the scheduler
 
@@ -520,7 +524,7 @@ exited
 - PSJF: 20%
 - Report: 20% 
 1. Explain how you implement 3 syscalls. (9%)
-2. When you switch to the `thrdstop_handler`, what context do you store? Is it redundant to store all callee and caller registers? (6%)
+2. When you switch to the `thrdstop_handler`, what context do you store? Is it redundant to store all callee and caller registers? <strong>UPDATE: Need to explain your reason</strong>(6%)
 3. Take a look at `struct context` in `/kernel/proc.h`. In context switching for processes, why does it only save callee registers and the ra register? (5%) 
 
 # How to submit
