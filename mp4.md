@@ -50,7 +50,6 @@ $ bigfile
 ..
 wrote 268 blocks
 bigfile: file is too small
-$
 ```
 
 The test fails because `bigfile` expects to create a file with 66666 blocks, but unmodified xv6 limits files to 268 blocks.
