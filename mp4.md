@@ -201,8 +201,7 @@ For example, you pass **Large Files** (4) and **Symbolic Links to Files** (4), b
 If you have any question, there are two ways to ask:
 - NTU COOL Discussion (Recommended)
 - TA Hour
-  -  6/4 09:00 ~ 10:00
-  - 6/4 10:00 ~ 11:00 (meet.google.com/iut-ofma-ykk)
+  - 6/4 10:30 ~ 11:30 (meet.google.com/iut-ofma-ykk)
   
 Empirically, the efficiency of online TA hour is uncertain. We will host a short TA hour first. If the effect is good, then we may host additional TA hours. No matter what, we still strongly recommend you post your questions on NTU COOL.
 
