@@ -39,7 +39,7 @@ If xv6 starts up successfully, congrats! Now you can start to play with MP4.
 ## Problems
 ### 1. Large Files (4 points)
 #### Preliminaries
-Change the `FSIZE` in `kernel/param.h` to 200000. This parameter controls the total number of blocks in xv6.
+Change the `FSSIZE` in `kernel/param.h` to 200000. This parameter controls the total number of blocks in xv6.
 
 #### Description
 In this problem you'll increase the maximum size of an xv6 file. Currently xv6 files are limited to 268 blocks, or 268*BSIZE bytes (BSIZE is 1024 bits in xv6). This limitation comes from the fact that an xv6 inode contains 12 "direct" block numbers and one "singly-indirect" block number, which refers to a block that holds up to 256 more block numbers, for a total of 12+256=268 blocks.
