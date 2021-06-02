@@ -34,7 +34,7 @@ We provide the whole xv6 code you need for this MP. All the necessary files are 
 If xv6 starts up successfully, congrats! Now you can start to play with MP4.
 
 ## Reminders
-⭐️  We strongly recommend you read Chapter 8 (file system) in xv6 hand book while you trace code. This gives get a quick overview of how xv6 implement its file system.
+⭐️  We strongly recommend you read Chapter 8 (file system) in xv6 hand book while you trace code. This gives you a quick overview of how xv6 implement its file system.
 
 ## Problems
 ### 1. Large Files (4 points)
